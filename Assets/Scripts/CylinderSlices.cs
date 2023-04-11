@@ -5,7 +5,9 @@ using UnityEngine;
 
 // this class is for the CENTER of the circle
 public class CylinderSlices : MonoBehaviour
-{    
+{
+    public Material[] materials;
+
     public float totalWallCount;
     public GameObject WallPrefab;
     private List<GameObject> walls;
@@ -39,15 +41,23 @@ public class CylinderSlices : MonoBehaviour
             Vector3 spawnPos = GetDotTransform(transform.position, RADIUS, i);
             newWall.transform.position = spawnPos;
 
-            //float rotationOffset = (360f / totalWallCount) * (float)i;            
-            //newWall.transform.eulerAngles = new Vector3(
-            //    newWall.transform.eulerAngles.x,
-            //    newWall.transform.eulerAngles.y,
-            //    newWall.transform.eulerAngles.z + rotationOffset
-            //);
+            //change the colors of each wall (for testing sake)
+            MeshRenderer mr = newWall.GetComponent<MeshRenderer>();
+            Debug.Assert(mr != null, "Uh OH Spaghettios! MeshRenderer cannot be null for index: " + i);
+            mr.material = GetMaterial(i);
+
+            //rotate the quad to face away from the center of the wheel (and instead face the player)
             newWall.transform.rotation = GetRotationAwayCenter(newWall); // make the gameobjects look away from the center of the circle
             newWall.name = "Slice_" + i;           
         }
+    }
+
+    private Material GetMaterial(int i)
+    {
+        //Material result = materials[0];        
+        //int rndIndex = Random.Range(0, materials.Length - 1);
+        //result = materials[rndIndex];
+        return materials[i % materials.Length];
     }
 
     private Quaternion GetRotationAwayCenter(GameObject gameObj)
