@@ -141,7 +141,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!136 &235357651
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -250,6 +250,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afa4dad81d11f6d4fb38b0148fb42115, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  materials:
+  - {fileID: 2100000, guid: f07046cb281b75140b0bd2c11da211db, type: 2}
+  - {fileID: 2100000, guid: fd7a209ca7da8604e9d2e12ee469bf91, type: 2}
+  - {fileID: 2100000, guid: b382988723f478346a17b7f717691c0e, type: 2}
+  - {fileID: 2100000, guid: 137e3d40206b9484db825ae6b6baf4f7, type: 2}
+  - {fileID: 2100000, guid: 41c031d4624afa74791217c8f3a11a25, type: 2}
   totalWallCount: 360
   WallPrefab: {fileID: 2810987958907911787, guid: a2ff9899a1eac8540bdc4818c074f535, type: 3}
 --- !u!4 &463980422
@@ -260,7 +266,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 463980420}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.9200001, z: -8.34}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
