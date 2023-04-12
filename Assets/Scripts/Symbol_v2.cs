@@ -1,17 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Symbol_v2 : MonoBehaviour
 {
+    public TextMeshProUGUI txtDisplay;
+
     private bool wheelIsMoving;    
     private float movementIncrementValue;
 
     // Start is called before the first frame update
-    public void Load()
+    public void Load(int i)
     {
         wheelIsMoving = false;
-   
+        txtDisplay.text = i + "";
     }
 
     public void StartMoving()

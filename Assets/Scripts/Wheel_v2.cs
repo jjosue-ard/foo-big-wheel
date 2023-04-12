@@ -7,7 +7,7 @@ public class Wheel_v2 : MonoBehaviour
     public Material[] materials;
     public GameObject symbolPrefab;
 
-    [Range(0.0f, 10.0f)]
+    [Range(0.0f, 5.0f)]
     public float MOVEMENT_INCREMENT;
 
     private List<Symbol_v2> Symbols;
@@ -16,7 +16,7 @@ public class Wheel_v2 : MonoBehaviour
     void Start()
     {
         Symbols = new List<Symbol_v2>();
-        GenerateSymbols(100, symbolPrefab);
+        GenerateSymbols(1000, symbolPrefab);
         InitSymbols();
         SpinWheel();
     }
@@ -67,7 +67,7 @@ public class Wheel_v2 : MonoBehaviour
     {        
         for (int i = 0; i < Symbols.Count; i++)
         {
-            Symbols[i].Load();
+            Symbols[i].Load(i);
         }
     }
 
