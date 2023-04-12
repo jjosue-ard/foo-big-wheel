@@ -18,7 +18,43 @@ public class Wheel_v2 : MonoBehaviour
         Symbols = new List<Symbol_v2>();
         GenerateSymbols(1000, symbolPrefab);
         InitSymbols();
+        SimulateGameRound();
+    }
+
+    private void SimulateGameRound()
+    {
         SpinWheel();
+        float timeAccumulate = 0;
+        StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.5f));
+        
+        timeAccumulate += 1f;
+        StartCoroutine(DelayedSpeedChange(timeAccumulate, 1f));
+
+        timeAccumulate += 1f;
+        StartCoroutine(DelayedSpeedChange(timeAccumulate, 3f));
+
+        timeAccumulate += 2f;
+        StartCoroutine(DelayedSpeedChange(timeAccumulate, 4f));
+
+        timeAccumulate += 3f;
+        StartCoroutine(DelayedSpeedChange(timeAccumulate, 3f));
+
+        timeAccumulate += 1f;
+        StartCoroutine(DelayedSpeedChange(timeAccumulate, 1f));
+
+        timeAccumulate += 1f;
+        StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.5f));
+
+        timeAccumulate += 0.8f;
+        StartCoroutine(DelayedSpeedChange(timeAccumulate, 0f));
+
+
+    }
+
+    IEnumerator DelayedSpeedChange(float delayTime, float newSpeedVal)
+    {
+        yield return new WaitForSeconds(delayTime);
+        UpdateSpeedOfSymbols(newSpeedVal);
     }
 
     private void GenerateSymbols(int count, GameObject prefab)
@@ -50,10 +86,10 @@ public class Wheel_v2 : MonoBehaviour
         return result;
     }
 
-    private void FixedUpdate()
-    {
-        UpdateSpeedOfSymbols(MOVEMENT_INCREMENT);
-    }
+    //private void FixedUpdate()
+    //{
+    //    UpdateSpeedOfSymbols(MOVEMENT_INCREMENT);
+    //}
 
     private void UpdateSpeedOfSymbols(float newIncrementVal)
     {
