@@ -11,6 +11,7 @@ public class Wheel_v2 : MonoBehaviour
     public float MOVEMENT_INCREMENT;
 
     private ReelStrip curReelStrip;
+    private ReelStrip prevReelStrip;
 
     // Start is called before the first frame update
     void Start()
@@ -30,47 +31,65 @@ public class Wheel_v2 : MonoBehaviour
     private void SimulateGameRound()
     {
         SpinWheel();
-        float timeAccumulate = 0;
-        StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.5f));
+        //float timeAccumulate = 0;
+        //StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.5f));
         
-        timeAccumulate += 0.5f;
-        StartCoroutine(DelayedSpeedChange(timeAccumulate, 1f));
+        //timeAccumulate += 0.5f;
+        //StartCoroutine(DelayedSpeedChange(timeAccumulate, 1f));
 
-        timeAccumulate += 1f;
-        StartCoroutine(DelayedSpeedChange(timeAccumulate, 3f));
+        //timeAccumulate += 1f;
+        //StartCoroutine(DelayedSpeedChange(timeAccumulate, 3f));
 
-        timeAccumulate += 2f;
-        StartCoroutine(DelayedSpeedChange(timeAccumulate, 4f));
+        //timeAccumulate += 2f;
+        //StartCoroutine(DelayedSpeedChange(timeAccumulate, 4f));
 
-        timeAccumulate += 1f;
-        StartCoroutine(DelayedSpeedChange(timeAccumulate, 3f));
+        //timeAccumulate += 1f;
+        //StartCoroutine(DelayedSpeedChange(timeAccumulate, 3f));
 
-        timeAccumulate += 1f;
-        StartCoroutine(DelayedSpeedChange(timeAccumulate, 1f));
+        //timeAccumulate += 1f;
+        //StartCoroutine(DelayedSpeedChange(timeAccumulate, 1f));
 
-        timeAccumulate += 1f;
-        StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.75f));
+        //timeAccumulate += 1f;
+        //StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.75f));
 
-        timeAccumulate += 1f;
-        StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.5f));
+        //timeAccumulate += 1f;
+        //StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.5f));
 
-        timeAccumulate += 1f;
-        StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.3f));
+        //timeAccumulate += 1f;
+        //StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.3f));
 
-        timeAccumulate += 0.75f;
-        StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.25f));
+        //timeAccumulate += 0.75f;
+        //StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.25f));
 
-        timeAccumulate += 0.5f;
-        StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.15f));
+        //timeAccumulate += 0.5f;
+        //StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.15f));
 
-        timeAccumulate += 0.4f;
-        StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.1f));
+        //timeAccumulate += 0.4f;
+        //StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.1f));
 
-        timeAccumulate += 0.3f;
-        StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.05f));
+        //timeAccumulate += 0.3f;
+        //StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.05f));
 
-        timeAccumulate += 1f;
-        StartCoroutine(DelayedSpeedChange(timeAccumulate, 0f));
+        //timeAccumulate += 1f;
+        //StartCoroutine(DelayedSpeedChange(timeAccumulate, 0f));
+
+        ReelDoneMovingProcedures();
+    }
+
+    private void ReelDoneMovingProcedures()
+    {
+        prevReelStrip = curReelStrip;
+        CreateAReelStrip(ReelStripPrefab);
+        PositionNewReelToBeAbovePrevReel(prevReelStrip, curReelStrip);
+        Invoke("SimulateGameRound", 3f);
+    }
+
+    private void PositionNewReelToBeAbovePrevReel(ReelStrip prevStrip, ReelStrip curStrip)
+    {
+        Vector3 prevStripTailPos = prevStrip.GetTailPosition();
+        Vector3 newPos = new Vector3(prevStripTailPos.x, prevStripTailPos.y + 5f, prevStripTailPos.z);
+        curStrip.transform.position = newPos;
+
     }
 
     IEnumerator DelayedSpeedChange(float delayTime, float newSpeedVal)
@@ -95,12 +114,20 @@ public class Wheel_v2 : MonoBehaviour
     private void UpdateSpeedOfReelStrip(float newIncrementVal)
     {
         curReelStrip.SetMovementIncrementValue(newIncrementVal);
+        if (prevReelStrip != null)
+        {
+            prevReelStrip.SetMovementIncrementValue(newIncrementVal);
+        }
     }
 
 
     private void SpinWheel()
     {
         curReelStrip.StartMoving();
+        if (prevReelStrip != null)
+        {
+            prevReelStrip.StartMoving();
+        }
     }
 
 
