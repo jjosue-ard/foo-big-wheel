@@ -10,6 +10,7 @@ public class ReelStrip : MonoBehaviour
     private bool isMoving;    
     private float movementIncrementValue;
     private List<Symbol_v2> Symbols;
+    private const int SYMBOL_COUNT = 10;
 
     // Start is called before the first frame update
     public void Load()
@@ -22,6 +23,11 @@ public class ReelStrip : MonoBehaviour
     {
         Debug.Log("ReelStrip.StartMoving()");
         isMoving = true;
+    }
+
+    public Vector3 GetTailPosition()
+    {
+        return Symbols[Symbols.Count - 1].transform.position;
     }
 
     public void SetMovementIncrementValue(float newVal)
@@ -38,7 +44,7 @@ public class ReelStrip : MonoBehaviour
     private void GenerateSymbolSequence()
     {
         Symbols = new List<Symbol_v2>();
-        GenerateSymbols(1000, symbolPrefab);
+        GenerateSymbols(SYMBOL_COUNT, symbolPrefab);
         InitSymbols();
     }
 
