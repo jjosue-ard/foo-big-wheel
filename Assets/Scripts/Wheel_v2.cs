@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Wheel_v2 : MonoBehaviour
 {
+    public ReelStrip ReelStripParent;
     public Material[] materials;
     public GameObject symbolPrefab;
 
@@ -18,6 +19,7 @@ public class Wheel_v2 : MonoBehaviour
         Symbols = new List<Symbol_v2>();
         GenerateSymbols(1000, symbolPrefab);
         InitSymbols();
+        ReelStripParent.Load();
         SimulateGameRound();
     }
 
@@ -27,7 +29,7 @@ public class Wheel_v2 : MonoBehaviour
         float timeAccumulate = 0;
         StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.5f));
         
-        timeAccumulate += 1f;
+        timeAccumulate += 0.5f;
         StartCoroutine(DelayedSpeedChange(timeAccumulate, 1f));
 
         timeAccumulate += 1f;
@@ -36,25 +38,41 @@ public class Wheel_v2 : MonoBehaviour
         timeAccumulate += 2f;
         StartCoroutine(DelayedSpeedChange(timeAccumulate, 4f));
 
-        timeAccumulate += 3f;
+        timeAccumulate += 1f;
         StartCoroutine(DelayedSpeedChange(timeAccumulate, 3f));
 
         timeAccumulate += 1f;
         StartCoroutine(DelayedSpeedChange(timeAccumulate, 1f));
 
         timeAccumulate += 1f;
+        StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.75f));
+
+        timeAccumulate += 1f;
         StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.5f));
 
-        timeAccumulate += 0.8f;
+        timeAccumulate += 1f;
+        StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.3f));
+
+        timeAccumulate += 0.75f;
+        StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.25f));
+
+        timeAccumulate += 0.5f;
+        StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.15f));
+
+        timeAccumulate += 0.4f;
+        StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.1f));
+
+        timeAccumulate += 0.3f;
+        StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.05f));
+
+        timeAccumulate += 1f;
         StartCoroutine(DelayedSpeedChange(timeAccumulate, 0f));
-
-
     }
 
     IEnumerator DelayedSpeedChange(float delayTime, float newSpeedVal)
     {
         yield return new WaitForSeconds(delayTime);
-        UpdateSpeedOfSymbols(newSpeedVal);
+        UpdateSpeedOfReelStrip(newSpeedVal);
     }
 
     private void GenerateSymbols(int count, GameObject prefab)
@@ -66,6 +84,7 @@ public class Wheel_v2 : MonoBehaviour
             Vector3 spawnPos = transform.position;
             spawnPos.y = transform.position.y + (5f * i);
             newGameObj.transform.position = spawnPos;
+            newGameObj.transform.parent = ReelStripParent.transform;
             Symbols.Add(newGameObj.GetComponent<Symbol_v2>());
 
             //change the colors of each wall (for testing sake)
@@ -91,12 +110,17 @@ public class Wheel_v2 : MonoBehaviour
     //    UpdateSpeedOfSymbols(MOVEMENT_INCREMENT);
     //}
 
-    private void UpdateSpeedOfSymbols(float newIncrementVal)
+    //private void UpdateSpeedOfSymbols(float newIncrementVal)
+    //{
+    //    for (int i = 0; i < Symbols.Count; i++)
+    //    {
+    //        Symbols[i].SetMovementIncrementValue(newIncrementVal);
+    //    }
+    //}
+
+    private void UpdateSpeedOfReelStrip(float newIncrementVal)
     {
-        for (int i = 0; i < Symbols.Count; i++)
-        {
-            Symbols[i].SetMovementIncrementValue(newIncrementVal);
-        }
+        ReelStripParent.SetMovementIncrementValue(newIncrementVal);
     }
 
     private void InitSymbols()
@@ -109,10 +133,7 @@ public class Wheel_v2 : MonoBehaviour
 
     private void SpinWheel()
     {
-        for (int i = 0; i < Symbols.Count; i++)
-        {
-            Symbols[i].StartMoving();
-        }
+        ReelStripParent.StartMoving();
     }
 
 
