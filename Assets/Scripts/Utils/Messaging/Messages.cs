@@ -39,6 +39,8 @@ namespace Assets.Scripts.Utils
         /// </summary>
         public const string Credits = "Credits";
 
+        public const string ReelStripInstance = "ReelStripInstance";
+
         public const string HandResult = "HandResult";
         public const string CardInfo = "CardInfo";
         public const string CardPos = "CardPos";

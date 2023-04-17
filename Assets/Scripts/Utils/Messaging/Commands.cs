@@ -17,6 +17,7 @@ namespace Assets.Scripts.Utils
         public const string DebugRequest = "testing123";
 
         public const string TargetReelSymbolReachedDestination = "TargetReelSymbolReachedDestination";
+        public const string ReelReachedItsDestroyPoint = "ReelReachedItsDestroyPoint";
         //SocketClient
         public const string ConnectionSuccess = "ConnectionSuccess";
 
