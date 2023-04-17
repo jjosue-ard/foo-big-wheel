@@ -1,3 +1,4 @@
+using Assets.Scripts.Utils;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,16 +6,20 @@ using UnityEngine;
 public class ReelStrip : MonoBehaviour
 {
     public Material[] materials;
-    public GameObject symbolPrefab;
+    public GameObject symbolPrefab;    
 
     private bool isMoving;    
     private float movementIncrementValue;
     private List<Symbol_v2> Symbols;
-    private const int SYMBOL_COUNT = 10;
+    private const int SYMBOL_COUNT = 200;
+    private const int TARGET_SYMBOL_INDEX = 167;
+    private const float STOPPING_POINT = 835f;
+    private float stoppingPoint;
 
     // Start is called before the first frame update
-    public void Load()
+    public void Load(float StoppingPointYPos)
     {
+        stoppingPoint = StoppingPointYPos;
         isMoving = false;
         GenerateSymbolSequence();
     }
@@ -38,7 +43,8 @@ public class ReelStrip : MonoBehaviour
     // Update is called once per frame
     private void FixedUpdate()
     {
-        EnsureMoveSymbol(movementIncrementValue);
+        EnsureMoveReelStrip(movementIncrementValue);
+        EnsureNotifyParentIfTargetSymbolReachedDestination(TARGET_SYMBOL_INDEX);
     }
 
     private void GenerateSymbolSequence()
@@ -54,6 +60,13 @@ public class ReelStrip : MonoBehaviour
         {
             Symbols[i].Load(i);
         }
+
+        AddListenerToTargetSymbol(Symbols[TARGET_SYMBOL_INDEX]);
+    }
+
+    private void AddListenerToTargetSymbol(Symbol_v2 targetSymbol)
+    {
+        EventManager.Instance.AddEventListener(this, targetSymbol, CustomEvent.Event, SymbolMessageHandler);
     }
 
     private void GenerateSymbols(int count, GameObject prefab)
@@ -85,7 +98,7 @@ public class ReelStrip : MonoBehaviour
         return result;
     }
 
-    private void EnsureMoveSymbol(float incrementVal)
+    private void EnsureMoveReelStrip(float incrementVal)
     {
         if (isMoving)
         {
@@ -95,5 +108,38 @@ public class ReelStrip : MonoBehaviour
         }
     }
 
-  
+    private void EnsureNotifyParentIfTargetSymbolReachedDestination(int targetSymbolIndex)
+    {
+        Symbol_v2 targetSymbol = Symbols[targetSymbolIndex];
+        Debug.Log("TargetSymbol.y: " + targetSymbol.transform.position.y + "<VS> stopping y: " + stoppingPoint);
+        if (targetSymbol.transform.position.y <= stoppingPoint)
+        {
+            isMoving = false;
+        }
+    }
+
+    private void SymbolMessageHandler(object sender, EventManagerEventArgs e)
+    {
+        MessageObject<string, object> ingressMsg = (MessageObject<string, object>)e.eventObject;
+        string command = (string)ingressMsg[Commands.Command];
+        switch (command)
+        {
+            case Commands.TargetReelSymbolReachedDestination:
+                //pass through
+                MessageObject<string, object> egress = ingressMsg;
+                SendMessageToParent(egress);
+                break;
+            default:
+                Debug.LogError("No case found for: " + command);
+                break;
+        }
+    }
+
+    public virtual void SendMessageToParent(MessageObject<string, object> messageObject)
+    {
+        EventManagerEventArgs args = new EventManagerEventArgs();
+        args.eventObject = messageObject;
+        EventManager.Instance.DispatchEvent(this, CustomEvent.Event, args);
+    }
+
 }
