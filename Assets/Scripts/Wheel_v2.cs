@@ -6,6 +6,7 @@ using UnityEngine;
 public class Wheel_v2 : MonoBehaviour
 {
     public GameObject ViewingBox;
+    public GameObject DestroyReelPoint;
     public GameObject ReelStripPrefab;
     public GameObject Canvas;
 
@@ -28,7 +29,7 @@ public class Wheel_v2 : MonoBehaviour
         newReelStrip.transform.SetParent(Canvas.transform,true);
         curReelStrip = newReelStrip.GetComponent<ReelStrip>();
         EventManager.Instance.AddEventListener(this, curReelStrip, CustomEvent.Event, ReelStripMessageHandler);
-        curReelStrip.Load(ViewingBox.transform.position.y);
+        curReelStrip.Load(ViewingBox.transform.position.y, DestroyReelPoint.transform.position.y);
         curReelStrip.name = "stripName: " + Time.realtimeSinceStartup;
     }
 
@@ -90,6 +91,11 @@ public class Wheel_v2 : MonoBehaviour
                 UpdateSpeedOfReelStrips(0f); //stop all reel strips
                 ReelDoneMovingProcedures();
                 break;
+            case Commands.ReelReachedItsDestroyPoint:
+                ReelStrip reelToDestroy = (ReelStrip)ingressMsg[Messages.ReelStripInstance];
+                EventManager.Instance.RemoveEventListener(this, reelToDestroy, CustomEvent.Event, ReelStripMessageHandler);
+                Destroy(reelToDestroy.gameObject);
+                break;
             default:
                 Debug.LogError("No case found for: " + command);
                 break;
@@ -105,11 +111,17 @@ public class Wheel_v2 : MonoBehaviour
 
     private void ReelDoneMovingProcedures()
     {
-        prevReelStrip = curReelStrip;
-        CreateAReelStrip(ReelStripPrefab);
-        Debug.Log("prevReel: " + prevReelStrip + "....curReel: " + curReelStrip);
-        PositionNewReelToBeAbovePrevReel(prevReelStrip, curReelStrip);
-        Invoke("SimulateGameRound", 3f);
+        // as a safeguard, ONLY create more reels if prevReelStrip is null (has been deleted already)
+        if (prevReelStrip == null)
+        {
+            prevReelStrip = curReelStrip;
+            CreateAReelStrip(ReelStripPrefab);
+            Debug.Log("prevReel: " + prevReelStrip + "....curReel: " + curReelStrip);
+            PositionNewReelToBeAbovePrevReel(prevReelStrip, curReelStrip);
+        }
+
+
+        Invoke("SimulateGameRound", 3f); // Simulate player pressing spacebar
     }
 
     private void PositionNewReelToBeAbovePrevReel(ReelStrip prevStrip, ReelStrip curStrip)
