@@ -12,7 +12,7 @@ public class ReelStrip : MonoBehaviour
     private float movementIncrementValue;
     private List<Symbol_v2> Symbols;
     private const int SYMBOL_COUNT = 200;
-    private const int TARGET_SYMBOL_INDEX = 167;
+    private const int TARGET_SYMBOL_INDEX = 168;
     private const float STOPPING_POINT = 835f;
     private float stoppingPoint;
 
