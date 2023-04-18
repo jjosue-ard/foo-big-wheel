@@ -17,7 +17,7 @@ public class Wheel_v2 : MonoBehaviour
     // how many symbols will show up in the player's view when the reel stops
     // This should be odd in this use case since the reel stops with a symbol right in the middle
     // Make sure to include any symbols that are partially visible in view
-    public int SYMBOLS_VISIBLE_IN_VIEW = 3;
+    public int SYMBOLS_VISIBLE_IN_VIEW_COUNT = 3;
 
     private ReelStrip curReelStrip;
     private ReelStrip prevReelStrip;
@@ -26,12 +26,54 @@ public class Wheel_v2 : MonoBehaviour
     void Start()
     {
         CreateAReelStrip(ReelStripPrefab);        
-        SimulateGameRound();
+        //SimulateGameRound();
+    }
+
+    private void EnsureCreateReelStripContinuingFromPrevReelStripIfAny(GameObject reelStripPrefab)
+    {
+        if (prevReelStrip == null)
+        {
+            CreateAReelStrip(reelStripPrefab);
+        }
+        else
+        {
+            // stitch the current reel's symbols in-view to be the head of the new reel
+            StitchPrevAndNewReel(prevReelStrip, curReelStrip, reelStripPrefab);
+        }
+    }
+
+    // this is assuming that there are already a current and prev reel strips
+    private void StitchPrevAndNewReel(ReelStrip prevReel, ReelStrip curReel, GameObject reelPrefab)
+    {
+        Debug.Assert(curReel != null, "HOLD yer horses there! curReel CANNOT be null!");
+        Debug.Assert(prevReel != null, "HOLD yer horses there! prevReel CANNOT be null!");
+
+        List<Symbol_v2> symbolsInView = GetSymbolsInView(SYMBOLS_VISIBLE_IN_VIEW_COUNT, curReelStrip);
+
+
+    }
+
+    // This calculates the bottom most symbol in-view
+    // (Assuming that the number of symbols in-view is an odd number; implying
+    // that there is 1 symbol right in the center
+    private List<Symbol_v2> GetSymbolsInView(int symbolsInViewCount, ReelStrip reelInView)
+    {
+        List<Symbol_v2> result = new List<Symbol_v2>();
+        int targetSymbolIndex = reelInView.GetTargetSymbolIndex();
+        int bottomSymbolInViewIndex = targetSymbolIndex - (symbolsInViewCount / 2);
+        for (int i = 0; i < symbolsInViewCount; i++ )
+        {
+            int indexToGet = bottomSymbolInViewIndex + i;
+            Symbol_v2 curSymbol = reelInView.GetSymbolScriptByIndex(indexToGet);
+            result.Add(curSymbol);
+        }
+
+        return result;
     }
 
     private void CreateAReelStrip(GameObject reelStrip)
     {
-        GameObject newReelStrip = Instantiate(reelStrip.gameObject, GetReelSpawnPosition(SYMBOLS_VISIBLE_IN_VIEW), transform.rotation, Canvas.transform); ;                
+        GameObject newReelStrip = Instantiate(reelStrip.gameObject, GetReelSpawnPosition(SYMBOLS_VISIBLE_IN_VIEW_COUNT), transform.rotation, Canvas.transform); ;                
         curReelStrip = newReelStrip.GetComponent<ReelStrip>();
         EventManager.Instance.AddEventListener(this, curReelStrip, CustomEvent.Event, ReelStripMessageHandler);
         curReelStrip.Load(ViewingBox.transform.position.y, DestroyReelPoint.transform.position.y, VERTICAL_INTERVAL_BETWEEN_SYMBOLS);
@@ -128,9 +170,10 @@ public class Wheel_v2 : MonoBehaviour
         if (prevReelStrip == null)
         {
             prevReelStrip = curReelStrip;
-            CreateAReelStrip(ReelStripPrefab);
-            Debug.Log("prevReel: " + prevReelStrip + "....curReel: " + curReelStrip);
-            PositionNewReelToBeAbovePrevReel(prevReelStrip, curReelStrip);
+            EnsureCreateReelStripContinuingFromPrevReelStripIfAny(ReelStripPrefab);
+            //CreateAReelStrip(ReelStripPrefab);
+            //Debug.Log("prevReel: " + prevReelStrip + "....curReel: " + curReelStrip);
+            //PositionNewReelToBeAbovePrevReel(prevReelStrip, curReelStrip);
         }
 
 
