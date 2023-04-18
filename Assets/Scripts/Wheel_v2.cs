@@ -12,6 +12,12 @@ public class Wheel_v2 : MonoBehaviour
 
     [Range(0.0f, 5.0f)]
     public float MOVEMENT_INCREMENT;
+    private const float VERTICAL_INTERVAL_BETWEEN_SYMBOLS = 5f;
+
+    // how many symbols will show up in the player's view when the reel stops
+    // This should be odd in this use case since the reel stops with a symbol right in the middle
+    // Make sure to include any symbols that are partially visible in view
+    public int SYMBOLS_VISIBLE_IN_VIEW = 3;
 
     private ReelStrip curReelStrip;
     private ReelStrip prevReelStrip;
@@ -25,12 +31,19 @@ public class Wheel_v2 : MonoBehaviour
 
     private void CreateAReelStrip(GameObject reelStrip)
     {
-        GameObject newReelStrip = Instantiate(reelStrip.gameObject, transform, false);        
-        newReelStrip.transform.SetParent(Canvas.transform,true);
+        GameObject newReelStrip = Instantiate(reelStrip.gameObject, GetReelSpawnPosition(SYMBOLS_VISIBLE_IN_VIEW), transform.rotation, Canvas.transform); ;                
         curReelStrip = newReelStrip.GetComponent<ReelStrip>();
         EventManager.Instance.AddEventListener(this, curReelStrip, CustomEvent.Event, ReelStripMessageHandler);
-        curReelStrip.Load(ViewingBox.transform.position.y, DestroyReelPoint.transform.position.y);
+        curReelStrip.Load(ViewingBox.transform.position.y, DestroyReelPoint.transform.position.y, VERTICAL_INTERVAL_BETWEEN_SYMBOLS);
         curReelStrip.name = "stripName: " + Time.realtimeSinceStartup;
+    }
+
+    private Vector3 GetReelSpawnPosition(int symbolsInView)
+    {
+        Vector3 result = ViewingBox.transform.position;
+        int symbolsAboveCenterLine = symbolsInView / 2;
+        result.y -= VERTICAL_INTERVAL_BETWEEN_SYMBOLS * symbolsAboveCenterLine; //move the head 
+        return result;
     }
 
     private void SimulateGameRound()
