@@ -27,13 +27,13 @@ public class Wheel_v2 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        EnsureCreateReelStripContinuingFromPrevReelStripIfAny(ReelStripPrefab, prevReelStrip, curReelStrip);
+        EnsureCreateReelStripContinuingFromPrevReelStripIfAny(ReelStripPrefab);
         SimulateGameRound();
     }
 
-    private void EnsureCreateReelStripContinuingFromPrevReelStripIfAny(GameObject reelStripPrefab, ReelStrip prevReel, ReelStrip curReel)
+    private void EnsureCreateReelStripContinuingFromPrevReelStripIfAny(GameObject reelStripPrefab)
     {
-        if (prevReel == null)
+        if (prevReelStrip == null)
         {
             curReelStrip = CreateAReelStrip(reelStripPrefab);
             curReelStrip.EnsureStitchAndGenerateReels(VERTICAL_INTERVAL_BETWEEN_SYMBOLS, SYMBOL_COUNT);
@@ -43,7 +43,8 @@ public class Wheel_v2 : MonoBehaviour
             // stitch the current reel's symbols in-view to be the head of the new reel
             List<Symbol_v2> symbolsInView = GetSymbolsInView(SYMBOLS_VISIBLE_IN_VIEW_COUNT, curReelStrip);
             curReelStrip = CreateAReelStrip(reelStripPrefab);
-            StitchPrevAndNewReel(symbolsInView, curReel, reelStripPrefab);
+            StitchPrevAndNewReel(symbolsInView, curReelStrip, reelStripPrefab);
+            //DestroyReelProcedures(prevReel);
         }
     }
 
@@ -52,6 +53,7 @@ public class Wheel_v2 : MonoBehaviour
     {
         Debug.Assert(curReel != null, "HOLD yer horses there! curReel CANNOT be null!");        
         curReel.EnsureStitchAndGenerateReels(VERTICAL_INTERVAL_BETWEEN_SYMBOLS, SYMBOL_COUNT, symbolsInView);
+
     }
 
     // This calculates the bottom most symbol in-view
@@ -177,7 +179,7 @@ public class Wheel_v2 : MonoBehaviour
         if (prevReelStrip == null)
         {
             prevReelStrip = curReelStrip;
-            EnsureCreateReelStripContinuingFromPrevReelStripIfAny(ReelStripPrefab, prevReelStrip, curReelStrip);
+            EnsureCreateReelStripContinuingFromPrevReelStripIfAny(ReelStripPrefab);
             //CreateAReelStrip(ReelStripPrefab);
             //Debug.Log("prevReel: " + prevReelStrip + "....curReel: " + curReelStrip);
             //PositionNewReelToBeAbovePrevReel(prevReelStrip, curReelStrip);
