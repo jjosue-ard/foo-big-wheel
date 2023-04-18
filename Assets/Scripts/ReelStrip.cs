@@ -10,8 +10,7 @@ public class ReelStrip : MonoBehaviour
 
     private bool isMoving;    
     private float movementIncrementValue;
-    private List<Symbol_v2> symbols;
-    //private const int SYMBOL_COUNT = 200;
+    private List<Symbol_v2> symbols;    
     private const int TARGET_SYMBOL_INDEX = 168;    
     private float stoppingPoint;
     private float destroyPoint;
@@ -127,6 +126,7 @@ public class ReelStrip : MonoBehaviour
             GameObject newGameObj = Instantiate(prefab, startingSpawnPoint.position, startingSpawnPoint.rotation, transform);
             Vector3 spawnPos = startingSpawnPoint.position;
             spawnPos.y = startingSpawnPoint.position.y + (verticalInterval * i);
+            spawnPos.z = -1; //to be shown in front of the viewing box
             newGameObj.transform.position = spawnPos;
             newGameObj.transform.parent = transform;
             symbols.Add(newGameObj.GetComponent<Symbol_v2>());
@@ -160,12 +160,16 @@ public class ReelStrip : MonoBehaviour
 
     private void EnsureNotifyParentIfTargetSymbolReachedDestination(int targetSymbolIndex)
     {
-        Symbol_v2 targetSymbol = symbols[targetSymbolIndex];
-        Debug.Log("TargetSymbol.y: " + targetSymbol.transform.position.y + "<VS> stopping y: " + stoppingPoint);
-        if (targetSymbol.transform.position.y <= stoppingPoint)
+        //safeguard
+        if (symbols != null)
         {
-            isMoving = false; //STOP REEL from moving
-            Invoke("SimulateWaitingForUserSpacebarInput", 3f);
+            Symbol_v2 targetSymbol = symbols[targetSymbolIndex];
+            Debug.Log("TargetSymbol.y: " + targetSymbol.transform.position.y + "<VS> stopping y: " + stoppingPoint);
+            if (targetSymbol.transform.position.y <= stoppingPoint)
+            {
+                isMoving = false; //STOP REEL from moving
+                Invoke("SimulateWaitingForUserSpacebarInput", 3f);
+            }
         }
     }
 
@@ -178,15 +182,18 @@ public class ReelStrip : MonoBehaviour
 
     private void EnsureNotifyParentIfReelStripIsReadyToBeDeleted()
     {
-        Symbol_v2 lastSymbol = symbols[symbols.Count - 1];
-        //Debug.Log("TargetSymbol.y: " + lastSymbol.transform.position.y + "<VS> destroy y: " + destroyPoint);
-        
-        if (lastSymbol.transform.position.y <= destroyPoint)
+        if (symbols != null)
         {
-            MessageObject<string, object> egress = new MessageObject<string, object>();
-            egress.Add(Commands.Command, Commands.ReelReachedItsDestroyPoint);
-            egress.Add(Messages.ReelStripInstance, this);
-            SendMessageToParent(egress);
+            Symbol_v2 lastSymbol = symbols[symbols.Count - 1];
+            //Debug.Log("TargetSymbol.y: " + lastSymbol.transform.position.y + "<VS> destroy y: " + destroyPoint);
+
+            if (lastSymbol.transform.position.y <= destroyPoint)
+            {
+                MessageObject<string, object> egress = new MessageObject<string, object>();
+                egress.Add(Commands.Command, Commands.ReelReachedItsDestroyPoint);
+                egress.Add(Messages.ReelStripInstance, this);
+                SendMessageToParent(egress);
+            }
         }
     }
 
