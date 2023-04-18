@@ -12,18 +12,17 @@ public class ReelStrip : MonoBehaviour
     private float movementIncrementValue;
     private List<Symbol_v2> Symbols;
     private const int SYMBOL_COUNT = 200;
-    private const int TARGET_SYMBOL_INDEX = 168;
-    private const float VERTICAL_INTERVAL_BETWEEN_SYMBOLS = 5f;
+    private const int TARGET_SYMBOL_INDEX = 168;    
     private float stoppingPoint;
     private float destroyPoint;
 
     // Start is called before the first frame update
-    public void Load(float StoppingPointYPos, float DestroyPointYPos)
+    public void Load(float StoppingPointYPos, float DestroyPointYPos, float verticalInterval)
     {
         stoppingPoint = StoppingPointYPos;
         destroyPoint = DestroyPointYPos;
         isMoving = false;
-        GenerateSymbolSequence(VERTICAL_INTERVAL_BETWEEN_SYMBOLS);
+        GenerateSymbolSequence(verticalInterval);
     }
 
     public void StartMoving()
