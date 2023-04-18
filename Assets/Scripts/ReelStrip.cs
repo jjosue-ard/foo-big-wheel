@@ -70,7 +70,7 @@ public class ReelStrip : MonoBehaviour
         symbols = new List<Symbol_v2>();
         if (symbolsToStitchAtHeadOfReelStrip != null)
         {                
-            StitchSymbolsInViewToHeadOfReel(symbols, symbolsToStitchAtHeadOfReelStrip);
+            StitchSymbolsInViewToHeadOfReel(ref symbols, symbolsToStitchAtHeadOfReelStrip);
             symbolCount -= symbolsToStitchAtHeadOfReelStrip.Count;
         }
         GenerateSymbols(symbolCount, SymbolPrefab, verticalInterval, GetStartingTransformBasedOnWhetherOrNotStitchingIsNeeded(symbolsToStitchAtHeadOfReelStrip));
@@ -90,11 +90,12 @@ public class ReelStrip : MonoBehaviour
         return result;
     }
 
-    private void StitchSymbolsInViewToHeadOfReel(List<Symbol_v2> reelSymbols, List<Symbol_v2> symbolsToStitch)
+    private void StitchSymbolsInViewToHeadOfReel(ref List<Symbol_v2> reelSymbols, List<Symbol_v2> symbolsToStitch)
     {
         for (int i = 0; i < symbolsToStitch.Count; i++)
         {
             reelSymbols.Add(symbolsToStitch[i]);
+            symbolsToStitch[i].gameObject.transform.SetParent(transform); //transfer from old reel to this reel
         }
     }
 
