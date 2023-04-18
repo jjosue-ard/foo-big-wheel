@@ -68,24 +68,30 @@ public class ReelStrip : MonoBehaviour
     public void EnsureStitchAndGenerateReels(float verticalInterval, int symbolCount, List<Symbol_v2> symbolsToStitchAtHeadOfReelStrip = null)
     {
         symbols = new List<Symbol_v2>();
+        int startIndexForInitSymbols = 0;
         if (symbolsToStitchAtHeadOfReelStrip != null)
         {                
             StitchSymbolsInViewToHeadOfReel(ref symbols, symbolsToStitchAtHeadOfReelStrip);
             symbolCount -= symbolsToStitchAtHeadOfReelStrip.Count;
+            startIndexForInitSymbols = symbolsToStitchAtHeadOfReelStrip.Count; // skip the symbols that are already in-view 
         }
-        GenerateSymbols(symbolCount, SymbolPrefab, verticalInterval, GetStartingTransformBasedOnWhetherOrNotStitchingIsNeeded(symbolsToStitchAtHeadOfReelStrip));
-        InitSymbols();
+        Transform startingSpawnPoint = GetStartingTransformBasedOnWhetherOrNotStitchingIsNeeded(symbolsToStitchAtHeadOfReelStrip, verticalInterval);        
+        GenerateSymbols(symbolCount, SymbolPrefab, verticalInterval, startingSpawnPoint, symbolsToStitchAtHeadOfReelStrip);
+        InitSymbols(startIndexForInitSymbols);
     }
 
     // If no stitching involved, then return this.transform
-    // ELSE return the last symbol in-view's transform
-    private Transform GetStartingTransformBasedOnWhetherOrNotStitchingIsNeeded(List<Symbol_v2> symbolsToStitch)
+    // ELSE return the last symbol in-view's transform with offset (so the new reel not right on top of the last symbol)
+    private Transform GetStartingTransformBasedOnWhetherOrNotStitchingIsNeeded(List<Symbol_v2> symbolsToStitch, float verticalInterval)
     {
         Transform result = transform;
         if (symbolsToStitch != null)
         {
             int lastdIndex = symbolsToStitch.Count - 1;
             result = symbolsToStitch[lastdIndex].gameObject.transform;
+            //Vector3 tmp = symbolsToStitch[lastdIndex].gameObject.transform.position;
+            //tmp.y += verticalInterval;
+            //result.position = tmp;
         }
         return result;
     }
@@ -106,9 +112,9 @@ public class ReelStrip : MonoBehaviour
     //    InitSymbols();
     //}
 
-    private void InitSymbols()
+    private void InitSymbols(int startIndex)
     {
-        for (int i = 0; i < symbols.Count; i++)
+        for (int i = startIndex; i < symbols.Count; i++)
         {
             symbols[i].Load(i);
         }
@@ -121,14 +127,14 @@ public class ReelStrip : MonoBehaviour
         EventManager.Instance.AddEventListener(this, targetSymbol, CustomEvent.Event, SymbolMessageHandler);
     }
 
-    private void GenerateSymbols(int count, GameObject prefab, float verticalInterval, Transform startingSpawnPoint)
-    {
+    private void GenerateSymbols(int count, GameObject prefab, float verticalInterval, Transform startingSpawnPoint, List<Symbol_v2> symbolsToStitchAtHeadOfReelStrip = null)
+    {        
         for (int i = 0; i < count; i++)
         {
             //Vector3 tmpPos = new Vector3(startingSpawnPoint.position.x, startingSpawnPoint.position.y, startingSpawnPoint.position.z);
             GameObject newGameObj = Instantiate(prefab, startingSpawnPoint.position, startingSpawnPoint.rotation, transform);
             Vector3 spawnPos = startingSpawnPoint.position;
-            spawnPos.y = startingSpawnPoint.position.y + (verticalInterval * i);
+            spawnPos.y = startingSpawnPoint.position.y + (verticalInterval * i) + GetYOffsetForStitchingReels(verticalInterval, symbolsToStitchAtHeadOfReelStrip);
             spawnPos.z = -1; //to be shown in front of the viewing box
             newGameObj.transform.position = spawnPos;
             newGameObj.transform.parent = transform;
@@ -143,6 +149,17 @@ public class ReelStrip : MonoBehaviour
             newGameObj.name = "Symbol" + i;
         }
     }
+
+    private float GetYOffsetForStitchingReels(float verticalInterval, List<Symbol_v2> symbolsToStitchAtHeadOfReelStrip)
+    {
+        float yOffset = 0;
+        if (symbolsToStitchAtHeadOfReelStrip != null)
+        {
+            yOffset = verticalInterval;
+        }
+        return yOffset;
+    }
+
     private Material GetRandomMaterial(int i)
     {
         Material result = materials[0];
