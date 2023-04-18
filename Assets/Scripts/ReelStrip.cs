@@ -6,12 +6,12 @@ using UnityEngine;
 public class ReelStrip : MonoBehaviour
 {
     public Material[] materials;
-    public GameObject symbolPrefab;    
+    public GameObject SymbolPrefab;    
 
     private bool isMoving;    
     private float movementIncrementValue;
-    private List<Symbol_v2> Symbols;
-    private const int SYMBOL_COUNT = 200;
+    private List<Symbol_v2> symbols;
+    //private const int SYMBOL_COUNT = 200;
     private const int TARGET_SYMBOL_INDEX = 168;    
     private float stoppingPoint;
     private float destroyPoint;
@@ -22,7 +22,17 @@ public class ReelStrip : MonoBehaviour
         stoppingPoint = StoppingPointYPos;
         destroyPoint = DestroyPointYPos;
         isMoving = false;
-        GenerateSymbolSequence(verticalInterval);
+        //GenerateSymbolSequence(verticalInterval);
+    }
+
+    public Symbol_v2 GetSymbolScriptByIndex(int i)
+    {
+        return symbols[i];
+    }
+
+    public int GetTargetSymbolIndex()
+    {
+        return TARGET_SYMBOL_INDEX;
     }
 
     public void StartMoving()
@@ -33,12 +43,12 @@ public class ReelStrip : MonoBehaviour
 
     public Vector3 GetHeadPosition()
     {
-        return Symbols[0].transform.position;
+        return symbols[0].transform.position;
     }
 
     public Vector3 GetTailPosition()
     {
-        return Symbols[Symbols.Count - 1].transform.position;
+        return symbols[symbols.Count - 1].transform.position;
     }
 
     public void SetMovementIncrementValue(float newVal)
@@ -54,21 +64,54 @@ public class ReelStrip : MonoBehaviour
         EnsureNotifyParentIfReelStripIsReadyToBeDeleted();
     }
 
-    private void GenerateSymbolSequence(float verticalInterval)
+    public void EnsureStitchAndGenerateReels(float verticalInterval, int symbolCount, List<Symbol_v2> symbolsToStitchAtHeadOfReelStrip = null)
     {
-        Symbols = new List<Symbol_v2>();
-        GenerateSymbols(SYMBOL_COUNT, symbolPrefab, verticalInterval);
+        symbols = new List<Symbol_v2>();
+        if (symbolsToStitchAtHeadOfReelStrip != null)
+        {                
+            StitchSymbolsInViewToHeadOfReel(symbols, symbolsToStitchAtHeadOfReelStrip);
+            symbolCount -= symbolsToStitchAtHeadOfReelStrip.Count;
+        }
+        GenerateSymbols(symbolCount, SymbolPrefab, verticalInterval, GetStartingTransformBasedOnWhetherOrNotStitchingIsNeeded(symbolsToStitchAtHeadOfReelStrip));
         InitSymbols();
     }
 
+    // If no stitching involved, then return this.transform
+    // ELSE return the last symbol in-view's transform
+    private Transform GetStartingTransformBasedOnWhetherOrNotStitchingIsNeeded(List<Symbol_v2> symbolsToStitch)
+    {
+        Transform result = transform;
+        if (symbolsToStitch != null)
+        {
+            int lastdIndex = symbolsToStitch.Count - 1;
+            result = symbolsToStitch[lastdIndex].gameObject.transform;
+        }
+        return result;
+    }
+
+    private void StitchSymbolsInViewToHeadOfReel(List<Symbol_v2> reelSymbols, List<Symbol_v2> symbolsToStitch)
+    {
+        for (int i = 0; i < symbolsToStitch.Count; i++)
+        {
+            reelSymbols.Add(symbolsToStitch[i]);
+        }
+    }
+
+    //private void GenerateSymbolSequence(float verticalInterval, int symbolCount)
+    //{
+    //    symbols = new List<Symbol_v2>();
+    //    GenerateSymbols(symbolCount, symbolPrefab, verticalInterval);
+    //    InitSymbols();
+    //}
+
     private void InitSymbols()
     {
-        for (int i = 0; i < Symbols.Count; i++)
+        for (int i = 0; i < symbols.Count; i++)
         {
-            Symbols[i].Load(i);
+            symbols[i].Load(i);
         }
 
-        AddListenerToTargetSymbol(Symbols[TARGET_SYMBOL_INDEX]);
+        AddListenerToTargetSymbol(symbols[TARGET_SYMBOL_INDEX]);
     }
 
     private void AddListenerToTargetSymbol(Symbol_v2 targetSymbol)
@@ -76,17 +119,17 @@ public class ReelStrip : MonoBehaviour
         EventManager.Instance.AddEventListener(this, targetSymbol, CustomEvent.Event, SymbolMessageHandler);
     }
 
-    private void GenerateSymbols(int count, GameObject prefab, float verticalInterval)
+    private void GenerateSymbols(int count, GameObject prefab, float verticalInterval, Transform startingSpawnPoint)
     {
         for (int i = 0; i < count; i++)
         {
-            Vector3 tmpPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-            GameObject newGameObj = Instantiate(prefab, tmpPos, transform.rotation, transform);
-            Vector3 spawnPos = transform.position;
-            spawnPos.y = transform.position.y + (verticalInterval * i);
+            //Vector3 tmpPos = new Vector3(startingSpawnPoint.position.x, startingSpawnPoint.position.y, startingSpawnPoint.position.z);
+            GameObject newGameObj = Instantiate(prefab, startingSpawnPoint.position, startingSpawnPoint.rotation, transform);
+            Vector3 spawnPos = startingSpawnPoint.position;
+            spawnPos.y = startingSpawnPoint.position.y + (verticalInterval * i);
             newGameObj.transform.position = spawnPos;
             newGameObj.transform.parent = transform;
-            Symbols.Add(newGameObj.GetComponent<Symbol_v2>());
+            symbols.Add(newGameObj.GetComponent<Symbol_v2>());
 
             //change the colors of each wall (for testing sake)
             MeshRenderer mr = newGameObj.GetComponent<MeshRenderer>();
@@ -117,7 +160,7 @@ public class ReelStrip : MonoBehaviour
 
     private void EnsureNotifyParentIfTargetSymbolReachedDestination(int targetSymbolIndex)
     {
-        Symbol_v2 targetSymbol = Symbols[targetSymbolIndex];
+        Symbol_v2 targetSymbol = symbols[targetSymbolIndex];
         Debug.Log("TargetSymbol.y: " + targetSymbol.transform.position.y + "<VS> stopping y: " + stoppingPoint);
         if (targetSymbol.transform.position.y <= stoppingPoint)
         {
@@ -135,7 +178,7 @@ public class ReelStrip : MonoBehaviour
 
     private void EnsureNotifyParentIfReelStripIsReadyToBeDeleted()
     {
-        Symbol_v2 lastSymbol = Symbols[Symbols.Count - 1];
+        Symbol_v2 lastSymbol = symbols[symbols.Count - 1];
         //Debug.Log("TargetSymbol.y: " + lastSymbol.transform.position.y + "<VS> destroy y: " + destroyPoint);
         
         if (lastSymbol.transform.position.y <= destroyPoint)
