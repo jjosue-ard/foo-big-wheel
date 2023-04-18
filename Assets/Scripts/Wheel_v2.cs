@@ -28,7 +28,7 @@ public class Wheel_v2 : MonoBehaviour
     void Start()
     {
         EnsureCreateReelStripContinuingFromPrevReelStripIfAny(ReelStripPrefab, prevReelStrip, curReelStrip);
-        //SimulateGameRound();
+        SimulateGameRound();
     }
 
     private void EnsureCreateReelStripContinuingFromPrevReelStripIfAny(GameObject reelStripPrefab, ReelStrip prevReel, ReelStrip curReel)
