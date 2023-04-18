@@ -270,6 +270,7 @@ MonoBehaviour:
   ReelStripPrefab: {fileID: 2569523028876763122, guid: 802ff833b17161d4394892fa94829c28, type: 3}
   Canvas: {fileID: 1077443041}
   MOVEMENT_INCREMENT: 0
+  SYMBOLS_VISIBLE_IN_VIEW: 3
 --- !u!1 &975166116
 GameObject:
   m_ObjectHideFlags: 0

@@ -149,7 +149,7 @@ GameObject:
   - component: {fileID: 6254096154192477834}
   - component: {fileID: 5654866384665028023}
   m_Layer: 0
-  m_Name: FalllingSymbolWithText
+  m_Name: SymbolPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
