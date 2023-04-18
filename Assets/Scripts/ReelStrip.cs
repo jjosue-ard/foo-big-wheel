@@ -12,7 +12,8 @@ public class ReelStrip : MonoBehaviour
     private float movementIncrementValue;
     private List<Symbol_v2> Symbols;
     private const int SYMBOL_COUNT = 200;
-    private const int TARGET_SYMBOL_INDEX = 168;    
+    private const int TARGET_SYMBOL_INDEX = 168;
+    private const float VERTICAL_INTERVAL_BETWEEN_SYMBOLS = 5f;
     private float stoppingPoint;
     private float destroyPoint;
 
@@ -22,7 +23,7 @@ public class ReelStrip : MonoBehaviour
         stoppingPoint = StoppingPointYPos;
         destroyPoint = DestroyPointYPos;
         isMoving = false;
-        GenerateSymbolSequence();
+        GenerateSymbolSequence(VERTICAL_INTERVAL_BETWEEN_SYMBOLS);
     }
 
     public void StartMoving()
@@ -54,10 +55,10 @@ public class ReelStrip : MonoBehaviour
         EnsureNotifyParentIfReelStripIsReadyToBeDeleted();
     }
 
-    private void GenerateSymbolSequence()
+    private void GenerateSymbolSequence(float verticalInterval)
     {
         Symbols = new List<Symbol_v2>();
-        GenerateSymbols(SYMBOL_COUNT, symbolPrefab);
+        GenerateSymbols(SYMBOL_COUNT, symbolPrefab, verticalInterval);
         InitSymbols();
     }
 
@@ -76,14 +77,14 @@ public class ReelStrip : MonoBehaviour
         EventManager.Instance.AddEventListener(this, targetSymbol, CustomEvent.Event, SymbolMessageHandler);
     }
 
-    private void GenerateSymbols(int count, GameObject prefab)
+    private void GenerateSymbols(int count, GameObject prefab, float verticalInterval)
     {
         for (int i = 0; i < count; i++)
         {
             Vector3 tmpPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
             GameObject newGameObj = Instantiate(prefab, tmpPos, transform.rotation, transform);
             Vector3 spawnPos = transform.position;
-            spawnPos.y = transform.position.y + (5f * i);
+            spawnPos.y = transform.position.y + (verticalInterval * i);
             newGameObj.transform.position = spawnPos;
             newGameObj.transform.parent = transform;
             Symbols.Add(newGameObj.GetComponent<Symbol_v2>());
