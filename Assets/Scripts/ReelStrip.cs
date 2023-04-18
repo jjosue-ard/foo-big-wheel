@@ -15,6 +15,8 @@ public class ReelStrip : MonoBehaviour
     private float stoppingPoint;
     private float destroyPoint;
 
+    private bool msgReachDestinationSend; //flag to prevent multiple messages from being sent to parent
+
     // Start is called before the first frame update
     public void Load(float StoppingPointYPos, float DestroyPointYPos, float verticalInterval)
     {
@@ -206,11 +208,20 @@ public class ReelStrip : MonoBehaviour
             case Commands.TargetReelSymbolReachedDestination:
                 //pass through
                 MessageObject<string, object> egress = ingressMsg;
-                SendMessageToParent(egress);
+                EnsureSendReachedDestinationOnce(ingressMsg);
                 break;
             default:
                 Debug.LogError("No case found for: " + command);
                 break;
+        }
+    }
+
+    private void EnsureSendReachedDestinationOnce(MessageObject<string, object> egress)
+    {
+        if (!msgReachDestinationSend)
+        {
+            msgReachDestinationSend = true;
+            SendMessageToParent(egress);
         }
     }
 
