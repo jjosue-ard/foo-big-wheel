@@ -118,9 +118,10 @@ public class ReelStrip : MonoBehaviour
     private void EnsureNotifyParentIfTargetSymbolReachedDestination(int targetSymbolIndex)
     {
         Symbol_v2 targetSymbol = Symbols[targetSymbolIndex];
-        //Debug.Log("TargetSymbol.y: " + targetSymbol.transform.position.y + "<VS> stopping y: " + stoppingPoint);
+        Debug.Log("TargetSymbol.y: " + targetSymbol.transform.position.y + "<VS> stopping y: " + stoppingPoint);
         if (targetSymbol.transform.position.y <= stoppingPoint)
         {
+            isMoving = false; //STOP REEL from moving
             Invoke("SimulateWaitingForUserSpacebarInput", 3f);
         }
     }
