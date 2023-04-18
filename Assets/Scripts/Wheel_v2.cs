@@ -150,8 +150,7 @@ public class Wheel_v2 : MonoBehaviour
                 break;
             case Commands.ReelReachedItsDestroyPoint:
                 ReelStrip reelToDestroy = (ReelStrip)ingressMsg[Messages.ReelStripInstance];
-                EventManager.Instance.RemoveEventListener(this, reelToDestroy, CustomEvent.Event, ReelStripMessageHandler);
-                Destroy(reelToDestroy.gameObject);
+                DestroyReelProcedures(reelToDestroy);
                 break;
             default:
                 Debug.LogError("No case found for: " + command);
@@ -164,6 +163,12 @@ public class Wheel_v2 : MonoBehaviour
         EventManagerEventArgs args = new EventManagerEventArgs();
         args.eventObject = messageObject;
         EventManager.Instance.DispatchEvent(this, CustomEvent.Event, args);
+    }
+
+    private void DestroyReelProcedures(ReelStrip reelToDestroy)
+    {        
+        EventManager.Instance.RemoveEventListener(this, reelToDestroy, CustomEvent.Event, ReelStripMessageHandler);
+        Destroy(reelToDestroy.gameObject);
     }
 
     private void ReelDoneMovingProcedures()
