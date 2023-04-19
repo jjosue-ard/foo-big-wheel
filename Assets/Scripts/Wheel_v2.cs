@@ -12,7 +12,7 @@ public class Wheel_v2 : MonoBehaviour
 
     [Range(0.0f, 5.0f)]
     public float MOVEMENT_INCREMENT;
-    private const float VERTICAL_INTERVAL_BETWEEN_SYMBOLS = 5f;
+    public float VERTICAL_INTERVAL_BETWEEN_SYMBOLS = 5f;
 
     // how many symbols will show up in the player's view when the reel stops
     // This should be odd in this use case since the reel stops with a symbol right in the middle
