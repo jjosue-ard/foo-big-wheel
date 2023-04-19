@@ -12,16 +12,14 @@ public class ReelStrip : MonoBehaviour
     private float movementIncrementValue;
     private List<Symbol_v2> symbols;    
     private const int TARGET_SYMBOL_INDEX = 168;    
-    private float stoppingPoint;
-    private float destroyPoint;
+    private float stoppingPoint;    
 
     private bool msgReachDestinationSend; //flag to prevent multiple messages from being sent to parent
 
     // Start is called before the first frame update
-    public void Load(float StoppingPointYPos, float DestroyPointYPos, float verticalInterval)
+    public void Load(float StoppingPointYPos, float verticalInterval)
     {
-        stoppingPoint = StoppingPointYPos;
-        destroyPoint = DestroyPointYPos;
+        stoppingPoint = StoppingPointYPos;        
         isMoving = false;
         //GenerateSymbolSequence(verticalInterval);
     }
@@ -62,7 +60,7 @@ public class ReelStrip : MonoBehaviour
     {
         EnsureMoveReelStrip(movementIncrementValue);
         EnsureNotifyParentIfTargetSymbolReachedDestination(TARGET_SYMBOL_INDEX);
-        EnsureNotifyParentIfReelStripIsReadyToBeDeleted();
+        //EnsureNotifyParentIfReelStripIsReadyToBeDeleted();
     }
 
     public void EnsureStitchAndGenerateReels(float verticalInterval, int symbolCount, List<Symbol_v2> symbolsToStitchAtHeadOfReelStrip = null)
@@ -200,22 +198,22 @@ public class ReelStrip : MonoBehaviour
         SendMessageToParent(egress);
     }
 
-    private void EnsureNotifyParentIfReelStripIsReadyToBeDeleted()
-    {
-        if (symbols != null)
-        {
-            Symbol_v2 lastSymbol = symbols[symbols.Count - 1];
-            //Debug.Log("TargetSymbol.y: " + lastSymbol.transform.position.y + "<VS> destroy y: " + destroyPoint);
+    //private void EnsureNotifyParentIfReelStripIsReadyToBeDeleted()
+    //{
+    //    if (symbols != null)
+    //    {
+    //        Symbol_v2 lastSymbol = symbols[symbols.Count - 1];
+    //        //Debug.Log("TargetSymbol.y: " + lastSymbol.transform.position.y + "<VS> destroy y: " + destroyPoint);
 
-            if (lastSymbol.transform.position.y <= destroyPoint)
-            {
-                MessageObject<string, object> egress = new MessageObject<string, object>();
-                egress.Add(Commands.Command, Commands.ReelReachedItsDestroyPoint);
-                egress.Add(Messages.ReelStripInstance, this);
-                SendMessageToParent(egress);
-            }
-        }
-    }
+    //        if (lastSymbol.transform.position.y <= destroyPoint)
+    //        {
+    //            MessageObject<string, object> egress = new MessageObject<string, object>();
+    //            egress.Add(Commands.Command, Commands.ReelReachedItsDestroyPoint);
+    //            egress.Add(Messages.ReelStripInstance, this);
+    //            SendMessageToParent(egress);
+    //        }
+    //    }
+    //}
 
     private void SymbolMessageHandler(object sender, EventManagerEventArgs e)
     {

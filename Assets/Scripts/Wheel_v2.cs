@@ -6,8 +6,7 @@ using UnityEngine;
 public class Wheel_v2 : MonoBehaviour
 {
 
-    public GameObject ViewingBox;
-    public GameObject DestroyReelPoint;
+    public GameObject ViewingBox;    
     public GameObject ReelStripPrefab;
     public GameObject Canvas;
 
@@ -44,7 +43,7 @@ public class Wheel_v2 : MonoBehaviour
             List<Symbol_v2> symbolsInView = GetSymbolsInView(SYMBOLS_VISIBLE_IN_VIEW_COUNT, curReelStrip);
             curReelStrip = CreateAReelStrip(reelStripPrefab);
             StitchPrevAndNewReel(symbolsInView, curReelStrip, reelStripPrefab);
-            //DestroyReelProcedures(prevReel);
+            DestroyReelProcedures(prevReelStrip);
         }
     }
 
@@ -79,7 +78,7 @@ public class Wheel_v2 : MonoBehaviour
         GameObject newReelStrip = Instantiate(reelStrip.gameObject, GetReelSpawnPosition(SYMBOLS_VISIBLE_IN_VIEW_COUNT), transform.rotation, Canvas.transform);
         ReelStrip newReel = newReelStrip.GetComponent<ReelStrip>();
         EventManager.Instance.AddEventListener(this, newReel, CustomEvent.Event, ReelStripMessageHandler);
-        newReel.Load(ViewingBox.transform.position.y, DestroyReelPoint.transform.position.y, VERTICAL_INTERVAL_BETWEEN_SYMBOLS);
+        newReel.Load(ViewingBox.transform.position.y, VERTICAL_INTERVAL_BETWEEN_SYMBOLS);
         newReel.name = "stripName: " + Time.realtimeSinceStartup;
         return newReel;
     }
@@ -150,10 +149,10 @@ public class Wheel_v2 : MonoBehaviour
                 UpdateSpeedOfReelStrips(0f); //stop all reel strips
                 ReelDoneMovingProcedures();
                 break;
-            case Commands.ReelReachedItsDestroyPoint:
-                ReelStrip reelToDestroy = (ReelStrip)ingressMsg[Messages.ReelStripInstance];
-                DestroyReelProcedures(reelToDestroy);
-                break;
+            //case Commands.ReelReachedItsDestroyPoint:
+            //    ReelStrip reelToDestroy = (ReelStrip)ingressMsg[Messages.ReelStripInstance];
+            //    DestroyReelProcedures(reelToDestroy);
+            //    break;
             default:
                 Debug.LogError("No case found for: " + command);
                 break;
