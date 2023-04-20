@@ -1,4 +1,4 @@
-=== 0.0.1
+=== 0.1.0
 - An earlier prototype scene called RotatingCylinder is also here but ignore it. It was deprecated upon learning that the reel should appear flat to the user and not on a rounded surface.
 - Symbols fall down in the screen giving the illusion of one big reel
 - The reel always stops at the specified index (which is currently 168 in this release)
@@ -9,3 +9,6 @@
     3. Based on a manually entered integer H , ReelStrip B takes H Symbol_v2 objects that are in-view (in this case indexes 169, 168, 167) and makes them the head of its reel
     4. ReelStrip B then generates the rest of its symbols (count = N - H)
     5. ReelStrip A gets destroyed, ReelStrip B starts moving downwards and the cycle happens all over again
+
+=== 0.0.1
+- Falling symbols can be seen with a speed slider on the Editor
