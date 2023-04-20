@@ -9,9 +9,7 @@ public class Wheel_v2 : MonoBehaviour
     public GameObject ViewingBox;    
     public GameObject ReelStripPrefab;
     public GameObject Canvas;
-
-    [Range(0.0f, 5.0f)]
-    public float MOVEMENT_INCREMENT;
+    
     public float VERTICAL_INTERVAL_BETWEEN_SYMBOLS = 5f;
 
     // how many symbols will show up in the player's view when the reel stops
