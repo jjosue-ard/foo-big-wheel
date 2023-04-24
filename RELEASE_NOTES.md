@@ -1,3 +1,8 @@
+=== 0.2.0
+- The Game now reads reel strip data from a JSON file with ReelDataManager
+- The text displayed on each slice is now taken from the json data
+- TODO: text on the reel is still not appearing on the Game window
+
 === 0.1.0
 - An earlier prototype scene called RotatingCylinder is also here but ignore it. It was deprecated upon learning that the reel should appear flat to the user and not on a rounded surface.
 - Symbols fall down in the screen giving the illusion of one big reel
