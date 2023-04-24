@@ -17,8 +17,8 @@ public class Wheel_v2 : MonoBehaviour
     // This should be odd in this use case since the reel stops with a symbol right in the middle
     // Make sure to include any symbols that are partially visible in view
     public int SYMBOLS_VISIBLE_IN_VIEW_COUNT = 3;
-    public int SYMBOL_COUNT = 200;
-
+    
+    private int SYMBOL_COUNT;
     private ReelStrip curReelStrip;
     private ReelStrip prevReelStrip;
 
@@ -26,8 +26,7 @@ public class Wheel_v2 : MonoBehaviour
     void Start()
     {
         ReelDataManager.Load();
-        ReelStripDataModel foo = ReelDataManager.GetReelStripData();
-        Debug.Log("count per reelStrip: " + foo.SymbolCountPerReelStrip);
+        SYMBOL_COUNT = ReelDataManager.GetReelStripData().SymbolCountPerReelStrip;
         EnsureCreateReelStripContinuingFromPrevReelStripIfAny(ReelStripPrefab);
         SimulateGameRound();
     }
