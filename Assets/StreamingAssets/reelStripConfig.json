@@ -1,0 +1,20 @@
+{
+    "SymbolCountPerReelStrip": 200,
+    "SymbolTable": [
+        {
+            "DisplayedText": "200",
+            "Weight": "7",
+            "PayValue": 150
+        },
+        {
+            "DisplayedText": "75",
+            "Weight": "5",
+            "PayValue": 15
+        },
+        {
+            "DisplayedText": "56",
+            "Weight": "35",
+            "PayValue": 1
+        }
+    ]
+}
