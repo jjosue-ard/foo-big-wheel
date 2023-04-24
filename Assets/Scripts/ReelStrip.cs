@@ -90,7 +90,8 @@ public class ReelStrip : MonoBehaviour
         float totalWeight = GetTotalWeight(symbolTable);
         float rndPicked = Random.Range(0, totalWeight);
         float weightSum = 0;
-        for (int i = 0; i < symbolTable.Count; i++)
+        int i = 0;
+        for (i = 0; i < symbolTable.Count; i++)
         {
             weightSum += symbolTable[i].Weight;
             if (rndPicked < weightSum)
@@ -154,8 +155,14 @@ public class ReelStrip : MonoBehaviour
     {
         for (int i = startIndex; i < symbols.Count; i++)
         {
-            symbols[i].Load(i, symbolTable[randomIndex]);
+            symbols[i].Load(i, GetRandomSymbolData(symbolTable));
         }        
+    }
+
+    private SymbolWeightDataModel GetRandomSymbolData(List<SymbolWeightDataModel> symbolTable)
+    {
+        int randomIndex = Random.Range(0, symbolTable.Count - 1);
+        return symbolTable[randomIndex];
     }
 
     private void AddListenerToTargetSymbol(Symbol_v2 targetSymbol)
