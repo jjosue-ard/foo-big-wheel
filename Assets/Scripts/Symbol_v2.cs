@@ -1,3 +1,4 @@
+using Assets.Scripts.Datamodels;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -9,12 +10,14 @@ public class Symbol_v2 : MonoBehaviour
 
     private bool wheelIsMoving;    
     private float movementIncrementValue;
+    private SymbolWeightDataModel symbolData;
 
     // Start is called before the first frame update
-    public void Load(int i)
+    public void Load(int i, SymbolWeightDataModel data)
     {
         wheelIsMoving = false;
         txtDisplay.text = i + "";
+        symbolData = new SymbolWeightDataModel(data);        
     }
 
     public void StartMoving()
