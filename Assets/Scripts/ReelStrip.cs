@@ -1,3 +1,4 @@
+using Assets.Scripts.Datamodels;
 using Assets.Scripts.Utils;
 using System.Collections;
 using System.Collections.Generic;
@@ -74,8 +75,47 @@ public class ReelStrip : MonoBehaviour
             startIndexForInitSymbols = symbolsToStitchAtHeadOfReelStrip.Count; // skip the symbols that are already in-view 
         }
         Transform startingSpawnPoint = GetStartingTransformBasedOnWhetherOrNotStitchingIsNeeded(symbolsToStitchAtHeadOfReelStrip, verticalInterval);        
+
+        // Create and initialize an entire reelstrip
+        // THEN put in the expected win result into the target destination on the reel strip
         GenerateSymbols(symbolCount, SymbolPrefab, verticalInterval, startingSpawnPoint, symbolsToStitchAtHeadOfReelStrip);
-        InitSymbols(startIndexForInitSymbols);
+        InitSymbols(startIndexForInitSymbols, ReelDataManager.GetReelStripData().SymbolTable);
+        SymbolWeightDataModel winSymbolData = PickWinningResult(ReelDataManager.GetReelStripData().SymbolTable);
+        InitTargetDestinationSymbol(winSymbolData, TARGET_SYMBOL_INDEX);
+    }
+
+    private SymbolWeightDataModel PickWinningResult(List<SymbolWeightDataModel> symbolTable)
+    {
+        SymbolWeightDataModel result = null;        
+        float totalWeight = GetTotalWeight(symbolTable);
+        float rndPicked = Random.Range(0, totalWeight);
+        float weightSum = 0;
+        for (int i = 0; i < symbolTable.Count; i++)
+        {
+            weightSum += symbolTable[i].Weight;
+            if (rndPicked < weightSum)
+            {
+                break;
+            }
+        }
+        result = symbolTable[i];
+        return result;
+    }
+
+    private float GetTotalWeight(List<SymbolWeightDataModel> symbolTable)
+    {
+        float result = 0;
+        for (int i = 0; i < symbolTable.Count; i++)
+        {
+            result += symbolTable[i].Weight;
+        }
+        return result;
+    }
+
+    private void InitTargetDestinationSymbol(SymbolWeightDataModel winResultData, int targetIndex)
+    {         
+        symbols[targetIndex].Load(targetIndex, winResultData);
+        AddListenerToTargetSymbol(symbols[TARGET_SYMBOL_INDEX]);
     }
 
     // If no stitching involved, then return this.transform
@@ -110,14 +150,12 @@ public class ReelStrip : MonoBehaviour
     //    InitSymbols();
     //}
 
-    private void InitSymbols(int startIndex)
+    private void InitSymbols(int startIndex, List<SymbolWeightDataModel> symbolTable)
     {
         for (int i = startIndex; i < symbols.Count; i++)
         {
-            symbols[i].Load(i);
-        }
-
-        AddListenerToTargetSymbol(symbols[TARGET_SYMBOL_INDEX]);
+            symbols[i].Load(i, symbolTable[randomIndex]);
+        }        
     }
 
     private void AddListenerToTargetSymbol(Symbol_v2 targetSymbol)
