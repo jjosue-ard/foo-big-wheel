@@ -1,3 +1,4 @@
+using Assets.Scripts.Datamodels;
 using Assets.Scripts.Utils;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,6 +25,9 @@ public class Wheel_v2 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        ReelDataManager.Load();
+        ReelStripDataModel foo = ReelDataManager.GetReelStripData();
+        Debug.Log("count per reelStrip: " + foo.SymbolCountPerReelStrip);
         EnsureCreateReelStripContinuingFromPrevReelStripIfAny(ReelStripPrefab);
         SimulateGameRound();
     }
