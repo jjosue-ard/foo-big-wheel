@@ -16,8 +16,11 @@ public class Symbol_v2 : MonoBehaviour
     public void Load(int i, SymbolWeightDataModel data)
     {
         wheelIsMoving = false;
-        txtDisplay.text = i + "";
-        symbolData = new SymbolWeightDataModel(data);        
+        txtDisplay.text = data.DisplayedText;
+
+        // deep copy
+        symbolData = new SymbolWeightDataModel();
+        DeepCopyData(data);
     }
 
     public void StartMoving()
@@ -34,6 +37,14 @@ public class Symbol_v2 : MonoBehaviour
     void FixedUpdate()
     {
         EnsureMoveSymbol(movementIncrementValue);        
+    }
+    
+    private void DeepCopyData(SymbolWeightDataModel data)
+    {
+        symbolData.DisplayedText = data.DisplayedText;
+        symbolData.PayValue = data.PayValue;
+        symbolData.Weight = data.Weight;
+
     }
 
     private void EnsureMoveSymbol(float incrementVal)
