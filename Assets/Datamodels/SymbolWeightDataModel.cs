@@ -11,5 +11,15 @@ namespace Assets.Scripts.Datamodels
         public string DisplayedText;
         public float Weight;
         public float PayValue;
+
+        public SymbolWeightDataModel(SymbolWeightDataModel dataToCopy)
+        {
+            dataToCopy.DisplayedText = DisplayedText;
+            dataToCopy.Weight = Weight;
+            dataToCopy.PayValue = PayValue;
+        }
+
     }
+
+ 
 }
