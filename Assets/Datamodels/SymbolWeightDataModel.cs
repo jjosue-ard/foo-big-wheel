@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Assets.Scripts.Datamodels
 {
     [Serializable]
-    public class SymbolWeightDataModel : MonoBehaviour
+    public class SymbolWeightDataModel
     {
         public string DisplayedText;
         public float Weight;
