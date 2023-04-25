@@ -79,7 +79,7 @@ public class Wheel_v2 : MonoBehaviour
         GameObject newReelStrip = Instantiate(reelStrip.gameObject, GetReelSpawnPosition(SYMBOLS_VISIBLE_IN_VIEW_COUNT), transform.rotation, Canvas.transform);
         ReelStrip newReel = newReelStrip.GetComponent<ReelStrip>();
         EventManager.Instance.AddEventListener(this, newReel, CustomEvent.Event, ReelStripMessageHandler);
-        newReel.Load(ViewingBox.transform.position.y, VERTICAL_INTERVAL_BETWEEN_SYMBOLS);
+        newReel.Load(ViewingBox.transform.position.y + 2f, VERTICAL_INTERVAL_BETWEEN_SYMBOLS);
         newReel.name = "stripName: " + Time.realtimeSinceStartup;
         return newReel;
     }
@@ -120,7 +120,7 @@ public class Wheel_v2 : MonoBehaviour
         timeAccumulate += 1f;
         StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.5f));
 
-        timeAccumulate += 1f;
+        timeAccumulate += 1.5f;
         StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.3f));
 
         timeAccumulate += 0.75f;
@@ -136,7 +136,7 @@ public class Wheel_v2 : MonoBehaviour
         StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.05f));
 
         timeAccumulate += 1f;
-        StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.1f));
+        StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.01f));
 
     }
     

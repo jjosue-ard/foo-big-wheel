@@ -114,7 +114,8 @@ public class ReelStrip : MonoBehaviour
     }
 
     private void InitTargetDestinationSymbol(SymbolWeightDataModel winResultData, int targetIndex)
-    {         
+    {
+        Debug.Log("Target win result: " + winResultData.DisplayedText);
         symbols[targetIndex].Load(targetIndex, winResultData);
         AddListenerToTargetSymbol(symbols[TARGET_SYMBOL_INDEX]);
     }
@@ -227,7 +228,7 @@ public class ReelStrip : MonoBehaviour
         if (symbols != null)
         {
             Symbol_v2 targetSymbol = symbols[targetSymbolIndex];
-            Debug.Log("TargetSymbol.y: " + targetSymbol.transform.position.y + "<VS> stopping y: " + stoppingPoint);
+            //Debug.Log("TargetSymbol.y: " + targetSymbol.transform.position.y + "<VS> stopping y: " + stoppingPoint);
             if (targetSymbol.transform.position.y <= stoppingPoint)
             {
                 isMoving = false; //STOP REEL from moving
@@ -239,7 +240,7 @@ public class ReelStrip : MonoBehaviour
     private void SimulateWaitingForUserSpacebarInput()
     {
         MessageObject<string, object> egress = new MessageObject<string, object>();
-        egress.Add(Commands.Command, Commands.TargetReelSymbolReachedDestination);
+        egress.Add(Commands.Command, Commands.TargetReelSymbolReachedDestination);        
         SendMessageToParent(egress);
     }
 
