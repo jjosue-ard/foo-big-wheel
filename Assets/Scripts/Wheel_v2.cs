@@ -17,8 +17,10 @@ public class Wheel_v2 : MonoBehaviour
     // This should be odd in this use case since the reel stops with a symbol right in the middle
     // Make sure to include any symbols that are partially visible in view
     public int SYMBOLS_VISIBLE_IN_VIEW_COUNT = 3;
-    
-    private int SYMBOL_COUNT;
+    public int TargetSymbolIndex = 168;
+
+    private float STOPPING_Y_POS; //where the falling reel strip will stop
+    private int SYMBOL_COUNT;    
     private ReelStrip curReelStrip;
     private ReelStrip prevReelStrip;
 
@@ -26,6 +28,7 @@ public class Wheel_v2 : MonoBehaviour
     void Start()
     {
         ReelDataManager.Load();
+        STOPPING_Y_POS = ViewingBox.transform.position.y + 2f;
         SYMBOL_COUNT = ReelDataManager.GetReelStripData().SymbolCountPerReelStrip;
         EnsureCreateReelStripContinuingFromPrevReelStripIfAny(ReelStripPrefab);
         SimulateGameRound();
@@ -79,7 +82,8 @@ public class Wheel_v2 : MonoBehaviour
         GameObject newReelStrip = Instantiate(reelStrip.gameObject, GetReelSpawnPosition(SYMBOLS_VISIBLE_IN_VIEW_COUNT), transform.rotation, Canvas.transform);
         ReelStrip newReel = newReelStrip.GetComponent<ReelStrip>();
         EventManager.Instance.AddEventListener(this, newReel, CustomEvent.Event, ReelStripMessageHandler);
-        newReel.Load(ViewingBox.transform.position.y + 2f, VERTICAL_INTERVAL_BETWEEN_SYMBOLS);
+        Debug.Assert(TargetSymbolIndex < ReelDataManager.GetReelStripData().SymbolCountPerReelStrip, "Target symbol index is out of bounds; Target index: " + TargetSymbolIndex + " total symbol count: " + ReelDataManager.GetReelStripData().SymbolCountPerReelStrip);
+        newReel.Load(STOPPING_Y_POS, VERTICAL_INTERVAL_BETWEEN_SYMBOLS, TargetSymbolIndex);
         newReel.name = "stripName: " + Time.realtimeSinceStartup;
         return newReel;
     }

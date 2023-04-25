@@ -12,16 +12,17 @@ public class ReelStrip : MonoBehaviour
     private bool isMoving;    
     private float movementIncrementValue;
     private List<Symbol_v2> symbols;    
-    private const int TARGET_SYMBOL_INDEX = 168;    
+    private int TARGET_SYMBOL_INDEX;    
     private float stoppingPoint;    
 
     private bool msgReachDestinationSend; //flag to prevent multiple messages from being sent to parent
 
     // Start is called before the first frame update
-    public void Load(float StoppingPointYPos, float verticalInterval)
+    public void Load(float StoppingPointYPos, float verticalInterval, int targetIndex)
     {
-        stoppingPoint = StoppingPointYPos;        
+        stoppingPoint = StoppingPointYPos;
         isMoving = false;
+        TARGET_SYMBOL_INDEX = targetIndex;
         //GenerateSymbolSequence(verticalInterval);
     }
 
