@@ -49,4 +49,4 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 137e3d40206b9484db825ae6b6baf4f7, type: 2}
   - {fileID: 2100000, guid: 41c031d4624afa74791217c8f3a11a25, type: 2}
   - {fileID: 2100000, guid: f07046cb281b75140b0bd2c11da211db, type: 2}
-  SymbolPrefab: {fileID: 3989464762050061358, guid: 8082200f06168e74a971536bf562a766, type: 3}
+  SymbolPrefab: {fileID: 2977661365648198070, guid: b54c4fecd62243b4d9e2c3226d60ed6a, type: 3}

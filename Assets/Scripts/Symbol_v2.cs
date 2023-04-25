@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Symbol_v2 : MonoBehaviour
 {
-    public TextMeshProUGUI txtDisplay;
+    public TextMeshPro txtDisplay;
 
     private bool wheelIsMoving;    
     private float movementIncrementValue;
