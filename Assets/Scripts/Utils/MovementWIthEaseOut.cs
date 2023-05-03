@@ -69,7 +69,7 @@ public class MovementWithEaseOut : MonoBehaviour
     {
         float distance = Vector3.Distance(targetSymbol.transform.position, targetPos);
         Debug.Log("-- Distance of target symbol from destination: " + distance);
-        float acceptableDegreeOfError = 1.5f;
+        float acceptableDegreeOfError = 1.01f;
         bool objectReachedDestination = distance <= acceptableDegreeOfError;
         if (objectReachedDestination)
         {
@@ -93,7 +93,7 @@ public class MovementWithEaseOut : MonoBehaviour
         float MAX_SPEED = 5f;
 
         float t = Time.time - startTime;
-        float peakT = 0.9f; // time t wherein the y-increment will reach its peak value
+        float peakT = 1f; // time t wherein the y-increment will reach its peak value
         float heightOfGaussianCurve = MAX_SPEED;
         float top = Mathf.Pow((t - peakT), 2);
         float widthOfGaussianCurve = duration * 0.39f; // how wide is the "hill" curve going to be over time
