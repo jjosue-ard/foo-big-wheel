@@ -29,7 +29,7 @@ public class FallingReelDriver : MonoBehaviour
     {
         ReelDataManager.Load();
         STOPPING_Y_POS = ViewingBox.transform.position;
-        STOPPING_Y_POS.y += 2f;
+        STOPPING_Y_POS.y += 1f;
         SYMBOL_COUNT = ReelDataManager.GetReelStripData().SymbolCountPerReelStrip;
         EnsureCreateReelStripContinuingFromPrevReelStripIfAny(ReelStripPrefab);
         SimulateGameRound();

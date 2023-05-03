@@ -24,7 +24,7 @@ public class MovementWithEaseOut : MonoBehaviour
     
 
     private GameObject reelStripParent; 
-    private GameObject targetSymbolToStopAt;
+    private GameObject targetSymbolToStopOn;
 
     // Start is called before the first frame update
     public void Load(Vector3 _destinationPos, GameObject _reelStripParent, GameObject targetSymbol)
@@ -33,7 +33,7 @@ public class MovementWithEaseOut : MonoBehaviour
         duration = 4;
         destinationPos = _destinationPos;
         reelStripParent = _reelStripParent;
-        targetSymbolToStopAt = targetSymbol;
+        targetSymbolToStopOn = targetSymbol;
         StartMoving();
     }
 
@@ -61,13 +61,18 @@ public class MovementWithEaseOut : MonoBehaviour
     {
         if (isMoving)
         {
-            EnsureMoveObject(destinationPos, targetSymbolToStopAt);
+            EnsureMoveObject(destinationPos, targetSymbolToStopOn);
         }
+    }
+
+    private float GetDistance()
+    {
+        return Vector3.Distance(targetSymbolToStopOn.transform.position, destinationPos);
     }
 
     private void EnsureMoveObject(Vector3 targetPos, GameObject targetSymbol)
     {
-        float distance = Vector3.Distance(targetSymbol.transform.position, targetPos);
+        float distance = GetDistance();
         Debug.Log("-- Distance of target symbol from destination: " + distance);
         float acceptableDegreeOfError = 1.01f;
         bool objectReachedDestination = distance <= acceptableDegreeOfError;
@@ -96,13 +101,20 @@ public class MovementWithEaseOut : MonoBehaviour
         float peakT = 1f; // time t wherein the y-increment will reach its peak value
         float heightOfGaussianCurve = MAX_SPEED;
         float top = Mathf.Pow((t - peakT), 2);
-        float widthOfGaussianCurve = duration * 0.39f; // how wide is the "hill" curve going to be over time
+        float widthOfGaussianCurve = duration * 0.4f; // how wide is the "hill" curve going to be over time
         float bottom = Mathf.Pow(widthOfGaussianCurve, 2) * 2;
         float e = (float)System.Math.E;
         float yIncrement = Mathf.Pow(e, (top / bottom) * -1) * heightOfGaussianCurve;
 
         // ensure that the yIncrement doesn't drop below 0.1; otherwise it will take forever to reach its destination
         yIncrement = Mathf.Clamp(yIncrement, 0.1f, MAX_SPEED);
+
+
+        if (GetDistance() < 1.5f)
+        {
+            yIncrement = 0.05f;
+        }
+
 
         Vector3 newPos = transform.position;
         newPos.y -= yIncrement;
