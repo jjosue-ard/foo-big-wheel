@@ -30,7 +30,7 @@ public class MovementWithEaseOut : MonoBehaviour
     public void Load(Vector3 _destinationPos, GameObject _reelStripParent, GameObject targetSymbol)
     {
         isMoving = false;
-        duration = 5;
+        duration = 4;
         destinationPos = _destinationPos;
         reelStripParent = _reelStripParent;
         targetSymbolToStopAt = targetSymbol;
@@ -68,13 +68,13 @@ public class MovementWithEaseOut : MonoBehaviour
     private void EnsureMoveObject(Vector3 targetPos, GameObject targetSymbol)
     {
         float distance = Vector3.Distance(targetSymbol.transform.position, targetPos);
-        float acceptableDegreeOfError = 0.1f;
+        Debug.Log("-- Distance of target symbol from destination: " + distance);
+        float acceptableDegreeOfError = 1.5f;
         bool objectReachedDestination = distance <= acceptableDegreeOfError;
         if (objectReachedDestination)
         {
             //stop object
-            isMoving = false;
-            reelStripParent.transform.position = targetPos; //set the position just to be more accurate and avoid offsets
+            isMoving = false;            
         }
         else
         {
@@ -93,10 +93,10 @@ public class MovementWithEaseOut : MonoBehaviour
         float MAX_SPEED = 5f;
 
         float t = Time.time - startTime;
-        float peakT = 1.5f; // time t wherein the y-increment will reach its peak value
+        float peakT = 0.9f; // time t wherein the y-increment will reach its peak value
         float heightOfGaussianCurve = MAX_SPEED;
         float top = Mathf.Pow((t - peakT), 2);
-        float widthOfGaussianCurve = duration * 0.4f; // how wide is the "hill" curve going to be over time
+        float widthOfGaussianCurve = duration * 0.39f; // how wide is the "hill" curve going to be over time
         float bottom = Mathf.Pow(widthOfGaussianCurve, 2) * 2;
         float e = (float)System.Math.E;
         float yIncrement = Mathf.Pow(e, (top / bottom) * -1) * heightOfGaussianCurve;
