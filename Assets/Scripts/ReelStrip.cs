@@ -14,12 +14,13 @@ public class ReelStrip : MonoBehaviour
     private int TARGET_SYMBOL_INDEX;       
 
     private bool msgReachDestinationSend; //flag to prevent multiple messages from being sent to parent
+    private Vector3 destinationPosition;
 
     // Start is called before the first frame update
-    public void Load(Vector3 destinationPosition, float verticalInterval, int targetIndex)
-    {
-        movementScript.Load(destinationPosition);        
+    public void Load(Vector3 _destinationPosition, float verticalInterval, int targetIndex)
+    {        
         TARGET_SYMBOL_INDEX = targetIndex;
+        destinationPosition = _destinationPosition;
         //GenerateSymbolSequence(verticalInterval);
     }
 
@@ -76,6 +77,8 @@ public class ReelStrip : MonoBehaviour
         InitSymbols(startIndexForInitSymbols, ReelDataManager.GetReelStripData().SymbolTable);
         SymbolWeightDataModel winSymbolData = PickWinningResult(ReelDataManager.GetReelStripData().SymbolTable);
         InitTargetDestinationSymbol(winSymbolData, TARGET_SYMBOL_INDEX);
+
+        movementScript.Load(destinationPosition, gameObject, symbols[TARGET_SYMBOL_INDEX].gameObject);
     }
 
     private SymbolWeightDataModel PickWinningResult(List<SymbolWeightDataModel> symbolTable)

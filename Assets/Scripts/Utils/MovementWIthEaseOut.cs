@@ -21,13 +21,19 @@ public class MovementWithEaseOut : MonoBehaviour
     private int direction; // could be 1 if moving in the positive direction, or -1 if opposite direction
 
     private bool isMoving;
+    
+
+    private GameObject reelStripParent; 
+    private GameObject targetSymbolToStopAt;
 
     // Start is called before the first frame update
-    public void Load(Vector3 _destinationPos)
+    public void Load(Vector3 _destinationPos, GameObject _reelStripParent, GameObject targetSymbol)
     {
         isMoving = false;
         duration = 5;
         destinationPos = _destinationPos;
+        reelStripParent = _reelStripParent;
+        targetSymbolToStopAt = targetSymbol;
         StartMoving();
     }
 
@@ -55,20 +61,20 @@ public class MovementWithEaseOut : MonoBehaviour
     {
         if (isMoving)
         {
-            EnsureMoveObject(destinationPos);
+            EnsureMoveObject(destinationPos, targetSymbolToStopAt);
         }
     }
 
-    private void EnsureMoveObject(Vector3 targetPos)
+    private void EnsureMoveObject(Vector3 targetPos, GameObject targetSymbol)
     {
-        float distance = Vector3.Distance(transform.position, targetPos);
+        float distance = Vector3.Distance(targetSymbol.transform.position, targetPos);
         float acceptableDegreeOfError = 0.1f;
         bool objectReachedDestination = distance <= acceptableDegreeOfError;
         if (objectReachedDestination)
         {
             //stop object
             isMoving = false;
-            transform.position = targetPos; //set the position just to be more accurate and avoid offsets
+            reelStripParent.transform.position = targetPos; //set the position just to be more accurate and avoid offsets
         }
         else
         {
@@ -101,7 +107,7 @@ public class MovementWithEaseOut : MonoBehaviour
         Vector3 newPos = transform.position;
         newPos.y -= yIncrement;
         Debug.Log("ypos: " + transform.position.y + ".. yIncrement: " + yIncrement);
-        transform.position = newPos;
+        reelStripParent.transform.position = newPos;
 
     }
 }
