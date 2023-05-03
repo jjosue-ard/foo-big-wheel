@@ -7,21 +7,18 @@ using UnityEngine;
 public class ReelStrip : MonoBehaviour
 {
     public Material[] materials;
-    public GameObject SymbolPrefab;    
-
-    private bool isMoving;    
-    private float movementIncrementValue;
+    public GameObject SymbolPrefab;
+    public MovementWithEaseOut movementScript;
+        
     private List<Symbol_v2> symbols;    
-    private int TARGET_SYMBOL_INDEX;    
-    private float stoppingPoint;    
+    private int TARGET_SYMBOL_INDEX;       
 
     private bool msgReachDestinationSend; //flag to prevent multiple messages from being sent to parent
 
     // Start is called before the first frame update
-    public void Load(float StoppingPointYPos, float verticalInterval, int targetIndex)
+    public void Load(Transform destinationPosition, float verticalInterval, int targetIndex)
     {
-        stoppingPoint = StoppingPointYPos;
-        isMoving = false;
+        movementScript.Load(destinationPosition);        
         TARGET_SYMBOL_INDEX = targetIndex;
         //GenerateSymbolSequence(verticalInterval);
     }
@@ -39,7 +36,8 @@ public class ReelStrip : MonoBehaviour
     public void StartMoving()
     {
         Debug.Log("ReelStrip.StartMoving()");
-        isMoving = true;
+        //isMoving = true;
+        movementScript.StartMoving();
     }
 
     public Vector3 GetHeadPosition()
@@ -52,18 +50,13 @@ public class ReelStrip : MonoBehaviour
         return symbols[symbols.Count - 1].transform.position;
     }
 
-    public void SetMovementIncrementValue(float newVal)
-    {
-        movementIncrementValue = newVal;
-    }
-
     // Update is called once per frame
-    private void FixedUpdate()
-    {
-        EnsureMoveReelStrip(movementIncrementValue);
-        EnsureNotifyParentIfTargetSymbolReachedDestination(TARGET_SYMBOL_INDEX);
-        //EnsureNotifyParentIfReelStripIsReadyToBeDeleted();
-    }
+    //private void FixedUpdate()
+    //{
+    //    EnsureMoveReelStrip(movementIncrementValue);
+    //    EnsureNotifyParentIfTargetSymbolReachedDestination(TARGET_SYMBOL_INDEX);
+    //    //EnsureNotifyParentIfReelStripIsReadyToBeDeleted();
+    //}
 
     public void EnsureStitchAndGenerateReels(float verticalInterval, int symbolCount, List<Symbol_v2> symbolsToStitchAtHeadOfReelStrip = null)
     {
@@ -211,32 +204,7 @@ public class ReelStrip : MonoBehaviour
         int rndIndex = Random.Range(0, materials.Length - 1);
         result = materials[rndIndex];
         return result;
-    }
-
-    private void EnsureMoveReelStrip(float incrementVal)
-    {
-        if (isMoving)
-        {
-            Vector3 newPos = transform.position;
-            newPos.y -= incrementVal;
-            transform.position = newPos;
-        }
-    }
-
-    private void EnsureNotifyParentIfTargetSymbolReachedDestination(int targetSymbolIndex)
-    {
-        //safeguard
-        if (symbols != null)
-        {
-            Symbol_v2 targetSymbol = symbols[targetSymbolIndex];
-            //Debug.Log("TargetSymbol.y: " + targetSymbol.transform.position.y + "<VS> stopping y: " + stoppingPoint);
-            if (targetSymbol.transform.position.y <= stoppingPoint)
-            {
-                isMoving = false; //STOP REEL from moving
-                Invoke("SimulateWaitingForUserSpacebarInput", 3f);
-            }
-        }
-    }
+    }   
 
     private void SimulateWaitingForUserSpacebarInput()
     {
