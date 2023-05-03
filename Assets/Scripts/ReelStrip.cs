@@ -184,7 +184,7 @@ public class ReelStrip : MonoBehaviour
             //change the colors of each wall (for testing sake)
             MeshRenderer mr = newGameObj.GetComponent<MeshRenderer>();
             Debug.Assert(mr != null, "Uh OH Spaghettios! MeshRenderer cannot be null for index: " + i);
-            mr.material = GetRandomMaterial(i);
+            mr.material = GetDebugMaterial(i);
 
             //rotate the quad to face away from the center of the wheel (and instead face the player)            
             newGameObj.name = "Symbol" + i;
@@ -199,6 +199,16 @@ public class ReelStrip : MonoBehaviour
             yOffset = verticalInterval;
         }
         return yOffset;
+    }
+
+    private Material GetDebugMaterial(int i)
+    {
+        Material result = materials[0];
+        if (i == TARGET_SYMBOL_INDEX)
+        {
+            result = materials[1];
+        }
+        return result;
     }
 
     private Material GetRandomMaterial(int i)
