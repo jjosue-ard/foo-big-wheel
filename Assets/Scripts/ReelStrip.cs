@@ -16,7 +16,7 @@ public class ReelStrip : MonoBehaviour
     private bool msgReachDestinationSend; //flag to prevent multiple messages from being sent to parent
 
     // Start is called before the first frame update
-    public void Load(Transform destinationPosition, float verticalInterval, int targetIndex)
+    public void Load(Vector3 destinationPosition, float verticalInterval, int targetIndex)
     {
         movementScript.Load(destinationPosition);        
         TARGET_SYMBOL_INDEX = targetIndex;

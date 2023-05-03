@@ -19,7 +19,7 @@ public class Wheel_v2 : MonoBehaviour
     public int SYMBOLS_VISIBLE_IN_VIEW_COUNT = 3;
     public int TargetSymbolIndex = 168;
 
-    private float STOPPING_Y_POS; //where the falling reel strip will stop
+    private Vector3 STOPPING_POS; //where the falling reel strip will stop
     private int SYMBOL_COUNT;    
     private ReelStrip curReelStrip;
     private ReelStrip prevReelStrip;
@@ -28,7 +28,8 @@ public class Wheel_v2 : MonoBehaviour
     void Start()
     {
         ReelDataManager.Load();
-        STOPPING_Y_POS = ViewingBox.transform.position.y + 2f;
+        STOPPING_POS = ViewingBox.transform.position;
+        STOPPING_POS.y += 2f;
         SYMBOL_COUNT = ReelDataManager.GetReelStripData().SymbolCountPerReelStrip;
         EnsureCreateReelStripContinuingFromPrevReelStripIfAny(ReelStripPrefab);
         SimulateGameRound();
@@ -83,7 +84,7 @@ public class Wheel_v2 : MonoBehaviour
         ReelStrip newReel = newReelStrip.GetComponent<ReelStrip>();
         EventManager.Instance.AddEventListener(this, newReel, CustomEvent.Event, ReelStripMessageHandler);
         Debug.Assert(TargetSymbolIndex < ReelDataManager.GetReelStripData().SymbolCountPerReelStrip, "Target symbol index is out of bounds; Target index: " + TargetSymbolIndex + " total symbol count: " + ReelDataManager.GetReelStripData().SymbolCountPerReelStrip);
-        newReel.Load(STOPPING_Y_POS, VERTICAL_INTERVAL_BETWEEN_SYMBOLS, TargetSymbolIndex);
+        newReel.Load(STOPPING_POS, VERTICAL_INTERVAL_BETWEEN_SYMBOLS, TargetSymbolIndex);
         newReel.name = "stripName: " + Time.realtimeSinceStartup;
         return newReel;
     }
@@ -100,47 +101,7 @@ public class Wheel_v2 : MonoBehaviour
     {
         SpinWheel();
 
-        float timeAccumulate = 0;
-        StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.5f));
-
-        timeAccumulate += 0.5f;
-        StartCoroutine(DelayedSpeedChange(timeAccumulate, 1f));
-
-        timeAccumulate += 1f;
-        StartCoroutine(DelayedSpeedChange(timeAccumulate, 3f));
-
-        timeAccumulate += 2f;
-        StartCoroutine(DelayedSpeedChange(timeAccumulate, 4f));
-
-        timeAccumulate += 1f;
-        StartCoroutine(DelayedSpeedChange(timeAccumulate, 3f));
-
-        timeAccumulate += 1f;
-        StartCoroutine(DelayedSpeedChange(timeAccumulate, 1f));
-
-        timeAccumulate += 1f;
-        StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.75f));
-
-        timeAccumulate += 1f;
-        StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.5f));
-
-        timeAccumulate += 1.5f;
-        StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.3f));
-
-        timeAccumulate += 0.75f;
-        StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.25f));
-
-        timeAccumulate += 0.5f;
-        StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.15f));
-
-        timeAccumulate += 0.4f;
-        StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.1f));
-
-        timeAccumulate += 0.3f;
-        StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.05f));
-
-        timeAccumulate += 1f;
-        StartCoroutine(DelayedSpeedChange(timeAccumulate, 0.01f));
+       
 
     }
     
@@ -151,7 +112,7 @@ public class Wheel_v2 : MonoBehaviour
         switch (command)
         {
             case Commands.TargetReelSymbolReachedDestination:
-                UpdateSpeedOfReelStrips(0f); //stop all reel strips
+                
                 ReelDoneMovingProcedures();
                 break;
             //case Commands.ReelReachedItsDestroyPoint:
@@ -201,11 +162,6 @@ public class Wheel_v2 : MonoBehaviour
 
     }
 
-    IEnumerator DelayedSpeedChange(float delayTime, float newSpeedVal)
-    {
-        yield return new WaitForSeconds(delayTime);
-        UpdateSpeedOfReelStrips(newSpeedVal);
-    }    
 
     //private void FixedUpdate()
     //{
@@ -220,15 +176,6 @@ public class Wheel_v2 : MonoBehaviour
     //    }
     //}
 
-    private void UpdateSpeedOfReelStrips(float newIncrementVal)
-    {
-        curReelStrip.SetMovementIncrementValue(newIncrementVal);
-        if (prevReelStrip != null)
-        {
-            prevReelStrip.SetMovementIncrementValue(newIncrementVal);
-        }
-    }
-
 
     private void SpinWheel()
     {
@@ -237,7 +184,7 @@ public class Wheel_v2 : MonoBehaviour
         {
             prevReelStrip.StartMoving();
         }
-        UpdateSpeedOfReelStrips(0.1f);
+        
     }
 
 

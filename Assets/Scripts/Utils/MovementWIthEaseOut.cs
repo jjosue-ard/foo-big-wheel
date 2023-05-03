@@ -14,7 +14,7 @@ using UnityEngine;
  */
 public class MovementWithEaseOut : MonoBehaviour
 {
-    private Transform destinationPos; //drag an object on the Editor to this variable for the destination position
+    private Vector3 destinationPos; //drag an object on the Editor to this variable for the destination position
 
     private float startTime;
     private float duration;
@@ -23,7 +23,7 @@ public class MovementWithEaseOut : MonoBehaviour
     private bool isMoving;
 
     // Start is called before the first frame update
-    public void Load(Transform _destinationPos)
+    public void Load(Vector3 _destinationPos)
     {
         isMoving = false;
         duration = 5;
@@ -35,7 +35,7 @@ public class MovementWithEaseOut : MonoBehaviour
     {
         startTime = Time.time;
         isMoving = true;
-        direction = DetermineDirection(transform.position, DestinationPos.position);
+        direction = DetermineDirection(transform.position, destinationPos);
 
     }
 
@@ -55,7 +55,7 @@ public class MovementWithEaseOut : MonoBehaviour
     {
         if (isMoving)
         {
-            EnsureMoveObject(DestinationPos.position);
+            EnsureMoveObject(destinationPos);
         }
     }
 
