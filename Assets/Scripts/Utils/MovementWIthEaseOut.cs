@@ -45,8 +45,7 @@ public class MovementWithEaseOut : MonoBehaviour
     }
 
     private void SetInitialConditions(GameObject targetSymbol)
-    {
-        MAX_SPEED = 5f;
+    {        
         targetSymbolToStopOn = targetSymbol;
         duration = 5.2f;
         totalDistanceToCover = GetDistanceToStoppingPoint();
