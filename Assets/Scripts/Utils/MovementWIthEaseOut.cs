@@ -19,12 +19,13 @@ public class MovementWithEaseOut : MonoBehaviour
     private float startTime;
     private float duration;
     private int direction; // could be 1 if moving in the positive direction, or -1 if opposite direction
-
     private bool isMoving;
-    
+    private float totalDistanceToCover;
+    private float MAX_SPEED = 5f;
+
 
     private GameObject reelStripParent; 
-    private GameObject targetSymbolToStopOn;
+    private GameObject targetSymbolToStopOn;       
 
     // Start is called before the first frame update
     public void Load(Vector3 _destinationPos, GameObject _reelStripParent, GameObject targetSymbol)
@@ -45,9 +46,11 @@ public class MovementWithEaseOut : MonoBehaviour
 
     private void SetInitialConditions(GameObject targetSymbol)
     {
+        MAX_SPEED = 5f;
         targetSymbolToStopOn = targetSymbol;
         duration = 4f;
 
+        totalDistanceToCover = GetDistanceToStoppingPoint();
     }
 
     private int DetermineDirection(Vector3 startPos, Vector3 destinationPos)
@@ -70,14 +73,14 @@ public class MovementWithEaseOut : MonoBehaviour
         }
     }
 
-    private float GetDistance()
+    private float GetDistanceToStoppingPoint()
     {
         return Vector3.Distance(targetSymbolToStopOn.transform.position, destinationPos);
     }
 
     private void EnsureMoveObject(Vector3 targetPos, GameObject targetSymbol)
     {
-        float distance = GetDistance();
+        float distance = GetDistanceToStoppingPoint();
         Debug.Log("-- Distance of target symbol from destination: " + distance);
         float acceptableDegreeOfError = 1.01f;
         bool objectReachedDestination = distance <= acceptableDegreeOfError;
@@ -102,6 +105,10 @@ public class MovementWithEaseOut : MonoBehaviour
     {
         float MAX_SPEED = 5f;
 
+    private float GetProgress()
+    {
+        return (totalDistanceToCover - GetDistanceToStoppingPoint()) / totalDistanceToCover;
+    }
         float t = Time.time - startTime;
         float peakT = 1f; // time t wherein the y-increment will reach its peak value
         float heightOfGaussianCurve = MAX_SPEED;
@@ -115,7 +122,7 @@ public class MovementWithEaseOut : MonoBehaviour
         yIncrement = Mathf.Clamp(yIncrement, 0.1f, MAX_SPEED);
 
 
-        if (GetDistance() < 1.5f)
+        if (GetDistanceToStoppingPoint() < 1.5f)
         {
             yIncrement = 0.05f;
         }
