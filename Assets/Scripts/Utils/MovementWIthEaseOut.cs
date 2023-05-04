@@ -46,7 +46,7 @@ public class MovementWithEaseOut : MonoBehaviour
     private void SetInitialConditions(GameObject targetSymbol)
     {
         targetSymbolToStopOn = targetSymbol;
-        duration = 5.2f;
+        duration = 4f;
 
     }
 
