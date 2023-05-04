@@ -29,12 +29,10 @@ public class MovementWithEaseOut : MonoBehaviour
     // Start is called before the first frame update
     public void Load(Vector3 _destinationPos, GameObject _reelStripParent, GameObject targetSymbol)
     {
-        isMoving = false;
-        duration = 4;
+        isMoving = false;        
         destinationPos = _destinationPos;
-        reelStripParent = _reelStripParent;
-        targetSymbolToStopOn = targetSymbol;
-        StartMoving();
+        reelStripParent = _reelStripParent;        
+        SetInitialConditions(targetSymbol);
     }
 
     public void StartMoving()
@@ -42,6 +40,13 @@ public class MovementWithEaseOut : MonoBehaviour
         startTime = Time.time;
         isMoving = true;
         direction = DetermineDirection(transform.position, destinationPos);
+
+    }
+
+    private void SetInitialConditions(GameObject targetSymbol)
+    {
+        targetSymbolToStopOn = targetSymbol;
+        duration = 5.2f;
 
     }
 
