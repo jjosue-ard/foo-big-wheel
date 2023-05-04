@@ -102,15 +102,24 @@ public class MovementWithEaseOut : MonoBehaviour
 
     private float GetHybridYIncrement()
     {
-        //float yInc = GetYIncrementWithEaseOut();
-        //if (GetProgress() >= 0.75f)
-        //{
-        //    float tmp = 1 - GetProgress();
-        //    yInc = tmp * MAX_SPEED;
-        //}
-        float tmp = 1 - GetProgress();
-        float yInc = tmp * MAX_SPEED;
+        float yInc = RampUpFunction();
+        if (GetProgress() >= 0.75f)
+        {
+            float tmp = 1 - GetProgress();
+            yInc = tmp * MAX_SPEED;
+        }
         yInc = Mathf.Clamp(yInc, 0.01f, MAX_SPEED);
+        return yInc;
+    }
+
+    private float RampUpFunction()
+    {
+        float t = Time.time - startTime;
+        float tmp = GetProgress();
+        float e = (float)System.Math.E;
+
+        float yInc = (float)System.Math.Log(t * 2);
+        yInc = Mathf.Clamp(yInc, 0.1f, MAX_SPEED);
         return yInc;
     }
 
