@@ -76,7 +76,12 @@ public class MovementWithEaseOut : MonoBehaviour
         Debug.Log("-- Distance of target symbol from destination: " + distance);
         float acceptableDegreeOfError = 1.01f;
         bool objectReachedDestination = distance <= acceptableDegreeOfError;
-        if (objectReachedDestination)
+
+        Vector3 nextIncrementPos = targetSymbolToStopOn.transform.position;
+        nextIncrementPos.y -= GetYIncrementWithEaseOut();
+        float nextIncrementDistance = Vector3.Distance(nextIncrementPos, destinationPos);
+        bool nextIncrementWillMakeObjectGoPastStoppingPoint = nextIncrementDistance > distance;
+        if (objectReachedDestination || nextIncrementWillMakeObjectGoPastStoppingPoint)
         {
             //stop object
             isMoving = false;            
