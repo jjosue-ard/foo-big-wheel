@@ -21,7 +21,7 @@ public class MovementWithEaseOut : MonoBehaviour
     private int direction; // could be 1 if moving in the positive direction, or -1 if opposite direction
     private bool isMoving;
     private float totalDistanceToCover;
-    private float MAX_SPEED = 5f;
+    private float MAX_SPEED = 1.2f;
 
 
     private GameObject reelStripParent; 
@@ -48,8 +48,7 @@ public class MovementWithEaseOut : MonoBehaviour
     {
         MAX_SPEED = 5f;
         targetSymbolToStopOn = targetSymbol;
-        duration = 4f;
-
+        duration = 5.2f;
         totalDistanceToCover = GetDistanceToStoppingPoint();
     }
 
@@ -101,19 +100,32 @@ public class MovementWithEaseOut : MonoBehaviour
 
     }
 
-    private float GetYIncrementWithEaseOut()
+    private float GetHybridYIncrement()
     {
-        float MAX_SPEED = 5f;
+        //float yInc = GetYIncrementWithEaseOut();
+        //if (GetProgress() >= 0.75f)
+        //{
+        //    float tmp = 1 - GetProgress();
+        //    yInc = tmp * MAX_SPEED;
+        //}
+        float tmp = 1 - GetProgress();
+        float yInc = tmp * MAX_SPEED;
+        yInc = Mathf.Clamp(yInc, 0.01f, MAX_SPEED);
+        return yInc;
+    }
 
     private float GetProgress()
     {
         return (totalDistanceToCover - GetDistanceToStoppingPoint()) / totalDistanceToCover;
     }
+
+    private float GetYIncrementWithEaseOut()
+    {        
         float t = Time.time - startTime;
-        float peakT = 1f; // time t wherein the y-increment will reach its peak value
+        float peakT = 0.1f; // time t wherein the y-increment will reach its peak value
         float heightOfGaussianCurve = MAX_SPEED;
         float top = Mathf.Pow((t - peakT), 2);
-        float widthOfGaussianCurve = duration * 0.4f; // how wide is the "hill" curve going to be over time
+        float widthOfGaussianCurve = duration * 1f; // how wide is the "hill" curve going to be over time
         float bottom = Mathf.Pow(widthOfGaussianCurve, 2) * 2;
         float e = (float)System.Math.E;
         float yIncrement = Mathf.Pow(e, (top / bottom) * -1) * heightOfGaussianCurve;
@@ -136,7 +148,7 @@ public class MovementWithEaseOut : MonoBehaviour
      */
     private void MoveObjectWithEaseOut()
     {
-        float yIncrement = GetYIncrementWithEaseOut();
+        float yIncrement = GetHybridYIncrement();
         Vector3 newPos = transform.position;
         newPos.y -= yIncrement;
         Debug.Log("ypos: " + transform.position.y + ".. yIncrement: " + yIncrement);
