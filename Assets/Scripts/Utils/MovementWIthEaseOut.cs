@@ -88,12 +88,7 @@ public class MovementWithEaseOut : MonoBehaviour
 
     }
 
-    /*
-     * See Gaussian function for a visual graph of
-     *  how the yIncrement value follows the shape of a hill
-     *  as time progresses (time is the horizontal x-axis and y-increment is the y-axis)
-     */
-    private void MoveObjectWithEaseOut()
+    private float GetYIncrementWithEaseOut()
     {
         float MAX_SPEED = 5f;
 
@@ -114,12 +109,20 @@ public class MovementWithEaseOut : MonoBehaviour
         {
             yIncrement = 0.05f;
         }
+        return yIncrement;
+    }
 
-
+    /*
+     * See Gaussian function for a visual graph of
+     *  how the yIncrement value follows the shape of a hill
+     *  as time progresses (time is the horizontal x-axis and y-increment is the y-axis)
+     */
+    private void MoveObjectWithEaseOut()
+    {
+        float yIncrement = GetYIncrementWithEaseOut();
         Vector3 newPos = transform.position;
         newPos.y -= yIncrement;
         Debug.Log("ypos: " + transform.position.y + ".. yIncrement: " + yIncrement);
         reelStripParent.transform.position = newPos;
-
     }
 }
