@@ -12,7 +12,7 @@ using UnityEngine;
  * This was written so that the object's velocity mimics that of a Gaussian function (looks like a hill when graphed).
  * The object will ramp up to a max speed and then gradually slow down, eventually stopping once it reaches its destination
  */
-public class MovementWithEaseOut : MonoBehaviour
+public class MoveWithEaseOut : MonoBehaviour
 {
     private Vector3 destinationPos; //drag an object on the Editor to this variable for the destination position
 
@@ -24,15 +24,15 @@ public class MovementWithEaseOut : MonoBehaviour
     private float MAX_SPEED = 5f;
 
 
-    private GameObject reelStripParent; 
-    private GameObject targetSymbolToStopOn;       
+    private GameObject reelStripParent;
+    private GameObject targetSymbolToStopOn;
 
     // Start is called before the first frame update
     public void Load(Vector3 _destinationPos, GameObject _reelStripParent, GameObject targetSymbol)
     {
-        isMoving = false;        
+        isMoving = false;
         destinationPos = _destinationPos;
-        reelStripParent = _reelStripParent;        
+        reelStripParent = _reelStripParent;
         SetInitialConditions(targetSymbol);
     }
 
@@ -45,9 +45,8 @@ public class MovementWithEaseOut : MonoBehaviour
     }
 
     private void SetInitialConditions(GameObject targetSymbol)
-    {        
+    {
         targetSymbolToStopOn = targetSymbol;
-        duration = 5.2f;
         totalDistanceToCover = GetDistanceToStoppingPoint();
     }
 
@@ -84,13 +83,13 @@ public class MovementWithEaseOut : MonoBehaviour
         bool objectReachedDestination = distance <= acceptableDegreeOfError;
 
         Vector3 nextIncrementPos = targetSymbolToStopOn.transform.position;
-        nextIncrementPos.y -= GetYIncrementWithEaseOut();
+        nextIncrementPos.y -= GetHybridYIncrement();
         float nextIncrementDistance = Vector3.Distance(nextIncrementPos, destinationPos);
         bool nextIncrementWillMakeObjectGoPastStoppingPoint = nextIncrementDistance > distance;
         if (objectReachedDestination || nextIncrementWillMakeObjectGoPastStoppingPoint)
         {
             //stop object
-            isMoving = false;            
+            isMoving = false;
         }
         else
         {
@@ -127,27 +126,27 @@ public class MovementWithEaseOut : MonoBehaviour
         return (totalDistanceToCover - GetDistanceToStoppingPoint()) / totalDistanceToCover;
     }
 
-    private float GetYIncrementWithEaseOut()
-    {        
-        float t = Time.time - startTime;
-        float peakT = 0.1f; // time t wherein the y-increment will reach its peak value
-        float heightOfGaussianCurve = MAX_SPEED;
-        float top = Mathf.Pow((t - peakT), 2);
-        float widthOfGaussianCurve = duration * 1f; // how wide is the "hill" curve going to be over time
-        float bottom = Mathf.Pow(widthOfGaussianCurve, 2) * 2;
-        float e = (float)System.Math.E;
-        float yIncrement = Mathf.Pow(e, (top / bottom) * -1) * heightOfGaussianCurve;
+    //private float GetYIncrementWithEaseOut()
+    //{        
+    //    float t = Time.time - startTime;
+    //    float peakT = 0.1f; // time t wherein the y-increment will reach its peak value
+    //    float heightOfGaussianCurve = MAX_SPEED;
+    //    float top = Mathf.Pow((t - peakT), 2);
+    //    float widthOfGaussianCurve = duration * 1f; // how wide is the "hill" curve going to be over time
+    //    float bottom = Mathf.Pow(widthOfGaussianCurve, 2) * 2;
+    //    float e = (float)System.Math.E;
+    //    float yIncrement = Mathf.Pow(e, (top / bottom) * -1) * heightOfGaussianCurve;
 
-        // ensure that the yIncrement doesn't drop below 0.1; otherwise it will take forever to reach its destination
-        yIncrement = Mathf.Clamp(yIncrement, 0.1f, MAX_SPEED);
+    //    // ensure that the yIncrement doesn't drop below 0.1; otherwise it will take forever to reach its destination
+    //    yIncrement = Mathf.Clamp(yIncrement, 0.1f, MAX_SPEED);
 
 
-        if (GetDistanceToStoppingPoint() < 1.5f)
-        {
-            yIncrement = 0.05f;
-        }
-        return yIncrement;
-    }
+    //    if (GetDistanceToStoppingPoint() < 1.5f)
+    //    {
+    //        yIncrement = 0.05f;
+    //    }
+    //    return yIncrement;
+    //}
 
     /*
      * See Gaussian function for a visual graph of

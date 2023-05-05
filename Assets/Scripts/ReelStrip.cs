@@ -8,7 +8,7 @@ public class ReelStrip : MonoBehaviour
 {
     public Material[] materials;
     public GameObject SymbolPrefab;
-    public MovementWithEaseOut movementScript;
+    public MoveWithEaseOut movementScript;
         
     private List<Symbol_v2> symbols;    
     private int TARGET_SYMBOL_INDEX;       
