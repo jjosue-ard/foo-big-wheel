@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2569523028876763123}
   - component: {fileID: 2569523028876763120}
-  - component: {fileID: 3907649905710355397}
+  - component: {fileID: 7397442797557713853}
   m_Layer: 0
   m_Name: ReelStrip
   m_TagString: Untagged
@@ -51,8 +51,8 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 41c031d4624afa74791217c8f3a11a25, type: 2}
   - {fileID: 2100000, guid: f07046cb281b75140b0bd2c11da211db, type: 2}
   SymbolPrefab: {fileID: 2977661365648198070, guid: b54c4fecd62243b4d9e2c3226d60ed6a, type: 3}
-  movementScript: {fileID: 3907649905710355397}
---- !u!114 &3907649905710355397
+  movementScript: {fileID: 7397442797557713853}
+--- !u!114 &7397442797557713853
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
