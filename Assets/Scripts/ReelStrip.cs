@@ -60,20 +60,18 @@ public class ReelStrip : MonoBehaviour
 
     public void EnsureStitchAndGenerateReels(float verticalInterval, int symbolCount, List<Symbol_v2> symbolsToStitchAtHeadOfReelStrip = null)
     {
-        symbols = new List<Symbol_v2>();
-        int startIndexForInitSymbols = 0;
+        symbols = new List<Symbol_v2>();        
         if (symbolsToStitchAtHeadOfReelStrip != null)
         {                
             StitchSymbolsInViewToHeadOfReel(ref symbols, symbolsToStitchAtHeadOfReelStrip);
             symbolCount -= symbolsToStitchAtHeadOfReelStrip.Count;
-            startIndexForInitSymbols = symbolsToStitchAtHeadOfReelStrip.Count; // skip the symbols that are already in-view 
         }
         Transform startingSpawnPoint = GetStartingTransformBasedOnWhetherOrNotStitchingIsNeeded(symbolsToStitchAtHeadOfReelStrip, verticalInterval);        
 
         // Create and initialize an entire reelstrip
         // THEN put in the expected win result into the target destination on the reel strip
         GenerateSymbols(symbolCount, SymbolPrefab, verticalInterval, startingSpawnPoint, symbolsToStitchAtHeadOfReelStrip);
-        InitSymbols(startIndexForInitSymbols, ReelDataManager.GetReelStripData().SymbolTable);
+        InitSymbols(0, ReelDataManager.GetReelStripData().SymbolTable);
         SymbolWeightDataModel winSymbolData = PickWinningResult(ReelDataManager.GetReelStripData().SymbolTable);
         InitTargetDestinationSymbol(winSymbolData, TARGET_SYMBOL_INDEX);
 
@@ -137,7 +135,9 @@ public class ReelStrip : MonoBehaviour
     {
         for (int i = 0; i < symbolsToStitch.Count; i++)
         {
-            reelSymbols.Add(symbolsToStitch[i]);
+            // the symbolsToStitch don't need to be added to the reelSymbols list because
+            // there's no need to reference them anymore at this point and
+            // it just causes offsets on the target symbol's index            
             symbolsToStitch[i].gameObject.transform.SetParent(transform); //transfer from old reel to this reel
         }
     }
