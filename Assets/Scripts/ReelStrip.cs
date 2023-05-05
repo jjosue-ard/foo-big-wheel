@@ -12,8 +12,7 @@ public class ReelStrip : MonoBehaviour
         
     private List<Symbol_v2> symbols;    
     private int TARGET_SYMBOL_INDEX;       
-
-    private bool msgReachDestinationSend; //flag to prevent multiple messages from being sent to parent
+    
     private Vector3 destinationPosition;
 
     // Start is called before the first frame update
@@ -78,6 +77,8 @@ public class ReelStrip : MonoBehaviour
         SymbolWeightDataModel winSymbolData = PickWinningResult(ReelDataManager.GetReelStripData().SymbolTable);
         InitTargetDestinationSymbol(winSymbolData, TARGET_SYMBOL_INDEX);
 
+        // init movement script
+        EventManager.Instance.AddEventListener(this, movementScript, CustomEvent.Event, MovementScriptMessageHandler);
         movementScript.Load(destinationPosition, gameObject, symbols[TARGET_SYMBOL_INDEX].gameObject);
     }
 
@@ -113,8 +114,7 @@ public class ReelStrip : MonoBehaviour
     private void InitTargetDestinationSymbol(SymbolWeightDataModel winResultData, int targetIndex)
     {
         Debug.Log("Target win result: " + winResultData.DisplayedText);
-        symbols[targetIndex].Load(targetIndex, winResultData);
-        AddListenerToTargetSymbol(symbols[TARGET_SYMBOL_INDEX]);
+        symbols[targetIndex].Load(targetIndex, winResultData);        
     }
 
     // If no stitching involved, then return this.transform
@@ -161,11 +161,6 @@ public class ReelStrip : MonoBehaviour
     {
         int randomIndex = Random.Range(0, symbolTable.Count - 1);
         return symbolTable[randomIndex];
-    }
-
-    private void AddListenerToTargetSymbol(Symbol_v2 targetSymbol)
-    {
-        EventManager.Instance.AddEventListener(this, targetSymbol, CustomEvent.Event, SymbolMessageHandler);
     }
 
     private void GenerateSymbols(int count, GameObject prefab, float verticalInterval, Transform startingSpawnPoint, List<Symbol_v2> symbolsToStitchAtHeadOfReelStrip = null)
@@ -243,29 +238,22 @@ public class ReelStrip : MonoBehaviour
     //    }
     //}
 
-    private void SymbolMessageHandler(object sender, EventManagerEventArgs e)
+    private void MovementScriptMessageHandler(object sender, EventManagerEventArgs e)
     {
         MessageObject<string, object> ingressMsg = (MessageObject<string, object>)e.eventObject;
         string command = (string)ingressMsg[Commands.Command];
         switch (command)
         {
             case Commands.TargetReelSymbolReachedDestination:
+                //remove listener to prevent duplicate receiving of this message
+                EventManager.Instance.RemoveEventListener(this, movementScript, CustomEvent.Event, MovementScriptMessageHandler);
                 //pass through
                 MessageObject<string, object> egress = ingressMsg;
-                EnsureSendReachedDestinationOnce(ingressMsg);
+                SendMessageToParent(egress);
                 break;
             default:
                 Debug.LogError("No case found for: " + command);
                 break;
-        }
-    }
-
-    private void EnsureSendReachedDestinationOnce(MessageObject<string, object> egress)
-    {
-        if (!msgReachDestinationSend)
-        {
-            msgReachDestinationSend = true;
-            SendMessageToParent(egress);
         }
     }
 
