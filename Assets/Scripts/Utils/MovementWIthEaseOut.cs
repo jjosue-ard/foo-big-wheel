@@ -21,7 +21,7 @@ public class MovementWithEaseOut : MonoBehaviour
     private int direction; // could be 1 if moving in the positive direction, or -1 if opposite direction
     private bool isMoving;
     private float totalDistanceToCover;
-    private float MAX_SPEED = 1.2f;
+    private float MAX_SPEED = 5f;
 
 
     private GameObject reelStripParent; 
