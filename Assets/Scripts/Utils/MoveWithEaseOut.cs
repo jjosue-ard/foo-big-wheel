@@ -79,13 +79,13 @@ public class MoveWithEaseOut : MonoBehaviour
     private void EnsureMoveObject(Vector3 targetPos, GameObject targetSymbol)
     {
         float distance = GetDistanceToStoppingPoint();
-        Debug.Log("-- Distance of target symbol from destination: " + distance);
-        float acceptableDegreeOfError = 1.01f;
+        //Debug.Log("-- Distance of target symbol" + targetSymbol.name + " from destination: " + distance);
+        float acceptableDegreeOfError = 0.01f;
         bool objectReachedDestination = distance <= acceptableDegreeOfError;
 
         Vector3 nextIncrementPos = targetSymbolToStopOn.transform.position;
         nextIncrementPos.y -= GetHybridYIncrement();
-        float nextIncrementDistance = Vector3.Distance(nextIncrementPos, destinationPos);
+        float nextIncrementDistance = Vector3.Distance(destinationPos, nextIncrementPos);
         bool nextIncrementWillMakeObjectGoPastStoppingPoint = nextIncrementDistance > distance;
         if (objectReachedDestination || nextIncrementWillMakeObjectGoPastStoppingPoint)
         {
