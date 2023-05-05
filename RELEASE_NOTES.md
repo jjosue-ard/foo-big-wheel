@@ -1,3 +1,10 @@
+=== 0.3.0
+- Game can now spin reel strip round after round with the new MoveWithEaseOut script
+- Using MoveWithEaseOut, the reel strip ramps up to reach max speed (using a log function), but once the target symbol is 75% closer to its destination, MoveWithEaseOut uses a linear function to take a percentage off the MAX_SPEED value to slow down
+
+=== 0.2.1
+- reel strip text are now appearing properly on the Game window
+
 === 0.2.0
 - The Game now reads reel strip data from a JSON file with ReelDataManager
 - The text displayed on each slice is now taken from the json data
