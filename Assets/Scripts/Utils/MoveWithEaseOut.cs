@@ -1,3 +1,4 @@
+using Assets.Scripts.Utils;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -90,6 +91,7 @@ public class MoveWithEaseOut : MonoBehaviour
         {
             //stop object
             isMoving = false;
+            NotifyParentReelReachedDestination();
         }
         else
         {
@@ -161,4 +163,19 @@ public class MoveWithEaseOut : MonoBehaviour
         Debug.Log("ypos: " + transform.position.y + ".. yIncrement: " + yIncrement);
         reelStripParent.transform.position = newPos;
     }
+
+    private void NotifyParentReelReachedDestination()
+    {
+        MessageObject<string, object> egress = new MessageObject<string, object>();
+        egress.Add(Commands.Command, Commands.TargetReelSymbolReachedDestination);
+        SendMessageToParent(egress);
+    }
+
+    private void SendMessageToParent(MessageObject<string, object> messageObject)
+    {
+        EventManagerEventArgs args = new EventManagerEventArgs();
+        args.eventObject = messageObject;
+        EventManager.Instance.DispatchEvent(this, CustomEvent.Event, args);
+    }
+
 }
