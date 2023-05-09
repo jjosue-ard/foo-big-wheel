@@ -170,7 +170,7 @@ public class ReelStrip : MonoBehaviour
         return symbolTable[indexOfSymbolDataBeingQueried];
     }
 
-    //This will handle negative numbers by adding k without changing the actual modulus offset value
+    //This will handle negative numbers (for indexing) by adding k without changing the actual modulus offset value
     private int CustomModulus(int j, int k)
     {
         int tmp = j % k; //this could possibly be a negative - which is unusable for indexing
@@ -199,7 +199,7 @@ public class ReelStrip : MonoBehaviour
             //change the colors of each wall (for testing sake)
             MeshRenderer mr = newGameObj.GetComponent<MeshRenderer>();
             Debug.Assert(mr != null, "Uh OH Spaghettios! MeshRenderer cannot be null for index: " + i);
-            mr.material = GetDebugMaterial(i);
+            mr.material = GetRandomMaterial(i);
 
             //rotate the quad to face away from the center of the wheel (and instead face the player)            
             newGameObj.name = "Symbol" + i;
