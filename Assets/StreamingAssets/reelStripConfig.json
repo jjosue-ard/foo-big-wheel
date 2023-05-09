@@ -2,19 +2,114 @@
     "SymbolCountPerReelStrip": 200,
     "SymbolTable": [
         {
-            "DisplayedText": "200",
-            "Weight": "7",
-            "PayValue": 150
+            "DisplayedText": "1",
+            "Weight": 300000,
+            "Pay": 1
         },
         {
-            "DisplayedText": "75",
-            "Weight": "5",
-            "PayValue": 15
+            "DisplayedText": "15",
+            "Weight": 15000,
+            "Pay": 15
         },
         {
-            "DisplayedText": "56",
-            "Weight": "35",
-            "PayValue": 1
+            "DisplayedText": "3",
+            "Weight": 100000,
+            "Pay": 3
+        },
+        {
+            "DisplayedText": "MINI",
+            "Weight": 40,
+            "Pay": 250
+        },
+        {
+            "DisplayedText": "2",
+            "Weight": 220000,
+            "Pay": 2
+        },
+        {
+            "DisplayedText": "20",
+            "Weight": 50000,
+            "Pay": 20
+        },
+        {
+            "DisplayedText": "5",
+            "Weight": 50000,
+            "Pay": 5
+        },       
+        {
+            "DisplayedText": "2X",
+            "Weight": 5000,
+            "Pay": 0
+        },
+        {
+            "DisplayedText": "7",
+            "Weight": 100000,
+            "Pay": 3
+        },                
+        {
+            "DisplayedText": "15",
+            "Weight": 20000,
+            "Pay": 15
+        },
+        {
+            "DisplayedText": "3",
+            "Weight": 100000,
+            "Pay": 3
+        },
+        {
+            "DisplayedText": "30",
+            "Weight": 3000,
+            "Pay": 30
+        },
+        {
+            "DisplayedText": "3",
+            "Weight": 150000,
+            "Pay": 3
+        },
+        {
+            "DisplayedText": "GRAND",
+            "Weight": 1,
+            "Pay": 10000
+        },
+        {
+            "DisplayedText": "3",
+            "Weight": 150000,
+            "Pay": 3
+        },
+        {
+            "DisplayedText": "20",
+            "Weight": 5000,
+            "Pay": 20
+        },
+        {
+            "DisplayedText": "5",
+            "Weight": 50000,
+            "Pay": 5
+        },
+        {
+            "DisplayedText": "MINOR",
+            "Weight": 40,
+            "Pay": 500
+        },
+        {
+            "DisplayedText": "2",
+            "Weight": 220000,
+            "Pay": 2
+        },
+        {
+            "DisplayedText": "15",
+            "Weight": 15000,
+            "Pay": 15
+        },
+        {
+            "DisplayedText": "5",
+            "Weight": 60000,
+            "Pay": 5
+        },
+        {
+            "DisplayedText": "MAJOR",
+            "Weight": 10,
+            "Pay": 1000
         }
     ]
 }
