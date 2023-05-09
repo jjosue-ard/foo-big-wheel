@@ -8,10 +8,10 @@ namespace Assets.Scripts.Datamodels
     [Serializable]
     public class SymbolWeightDataModel
     {
+        public int id; // will help identify this symbol despite duplicate DisplayedTexts
         public string DisplayedText;
         public float Weight;
-        public float PayValue;
-
+        public float PayValue;        
     }
 
  

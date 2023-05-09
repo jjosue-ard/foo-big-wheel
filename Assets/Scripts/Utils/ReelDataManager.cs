@@ -12,12 +12,23 @@ namespace Assets.Scripts.Utils
         public static void Load()
         {
             reelStripData = ReadDataFromFile();
+            AttachIDsOnReelStripDataElements(reelStripData.SymbolTable);
         }
 
 
         public static ReelStripDataModel GetReelStripData()
         {
             return reelStripData;
+        }
+
+        // sets the id of each reelStripData element to be its index number
+        // this will help identify each symbol, even though there duplicates of them on the reel
+        private static void AttachIDsOnReelStripDataElements(List<SymbolWeightDataModel> symbolTable)
+        {
+            for (int i = 0; i < symbolTable.Count; i++)
+            {
+                symbolTable[i].id = i;
+            }
         }
 
         private static ReelStripDataModel ReadDataFromFile()
