@@ -11,7 +11,7 @@ public class ReelStrip : MonoBehaviour
     public MoveWithEaseOut movementScript;
         
     private List<Symbol_v2> symbols;    
-    private int TARGET_SYMBOL_INDEX;       
+    private int TARGET_SYMBOL_INDEX; // the index relative to the reel strip's list of symbols where the winning symbol will be placed
     
     private Vector3 destinationPosition;
 
@@ -71,8 +71,8 @@ public class ReelStrip : MonoBehaviour
         // Create and initialize an entire reelstrip
         // THEN put in the expected win result into the target destination on the reel strip
         GenerateSymbols(symbolCount, SymbolPrefab, verticalInterval, startingSpawnPoint, symbolsToStitchAtHeadOfReelStrip);
-        InitSymbols(0, ReelDataManager.GetReelStripData().SymbolTable);
         SymbolWeightDataModel winSymbolData = PickWinningResult(ReelDataManager.GetReelStripData().SymbolTable);
+        InitSymbols(0, ReelDataManager.GetReelStripData().SymbolTable, winSymbolData);        
         InitTargetDestinationSymbol(winSymbolData, TARGET_SYMBOL_INDEX);
 
         // init movement script
@@ -82,7 +82,7 @@ public class ReelStrip : MonoBehaviour
 
     private SymbolWeightDataModel PickWinningResult(List<SymbolWeightDataModel> symbolTable)
     {
-        SymbolWeightDataModel result = null;        
+        SymbolWeightDataModel result = null;
         float totalWeight = GetTotalWeight(symbolTable);
         float rndPicked = Random.Range(0, totalWeight);
         float weightSum = 0;
@@ -149,19 +149,39 @@ public class ReelStrip : MonoBehaviour
     //    InitSymbols();
     //}
 
-    private void InitSymbols(int startIndex, List<SymbolWeightDataModel> symbolTable)
+    private void InitSymbols(int startIndex, List<SymbolWeightDataModel> symbolTable, SymbolWeightDataModel winningSymbol)
     {
         for (int i = startIndex; i < symbols.Count; i++)
         {
-            symbols[i].Load(i, GetRandomSymbolData(symbolTable));
+            symbols[i].Load(i, GetCorrespondingSymbolDataFromTable(symbolTable, i, winningSymbol));
         }        
     }
 
-    private SymbolWeightDataModel GetRandomSymbolData(List<SymbolWeightDataModel> symbolTable)
+    // Get the index of a symbol from the SymbolTable, relative to its position from the winningSymbol's index on the reelStrip
+    private SymbolWeightDataModel GetCorrespondingSymbolDataFromTable(List<SymbolWeightDataModel> symbolTable, int i, SymbolWeightDataModel winningSymbols)
     {
-        int randomIndex = Random.Range(0, symbolTable.Count - 1);
-        return symbolTable[randomIndex];
+        int indexOfWinningSymbolRelativeToSymbolTable = winningSymbols.id;
+        int indexDiff = TARGET_SYMBOL_INDEX - i;
+        int offsetRelativeToWinningSymbolInSymbolTable = indexDiff % symbolTable.Count;
+        offsetRelativeToWinningSymbolInSymbolTable = CustomModulus(offsetRelativeToWinningSymbolInSymbolTable, symbolTable.Count);
+
+        int indexOfSymbolDataBeingQueried = (offsetRelativeToWinningSymbolInSymbolTable + indexOfWinningSymbolRelativeToSymbolTable) % symbolTable.Count;
+        Debug.Log("index of symbol Queried: " + indexOfSymbolDataBeingQueried);
+        return symbolTable[indexOfSymbolDataBeingQueried];
     }
+
+    //This will handle negative numbers by adding k without changing the actual modulus offset value
+    private int CustomModulus(int j, int k)
+    {
+        int tmp = j % k; //this could possibly be a negative - which is unusable for indexing
+        return (tmp + k) % k;
+    }
+
+    //private SymbolWeightDataModel GetRandomSymbolData(List<SymbolWeightDataModel> symbolTable)
+    //{
+    //    int randomIndex = Random.Range(0, symbolTable.Count - 1);
+    //    return symbolTable[randomIndex];
+    //}
 
     private void GenerateSymbols(int count, GameObject prefab, float verticalInterval, Transform startingSpawnPoint, List<Symbol_v2> symbolsToStitchAtHeadOfReelStrip = null)
     {        
